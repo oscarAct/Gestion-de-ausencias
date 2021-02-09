@@ -1,23 +1,23 @@
 .DS_Store
-node_modules
-/dist
+gestion-ausencias-js/node_modules
+gestion-ausencias-js/dist
 
 
 # local env files
-.env.local
-.env.*.local
+gestion-ausencias-js/.env.local
+gestion-ausencias-js/.env.*.local
 
 # Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+gestion-ausencias-js/npm-debug.log*
+gestion-ausencias-js/yarn-debug.log*
+gestion-ausencias-js/yarn-error.log*
+gestion-ausencias-js/pnpm-debug.log*
 
 # Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+gestion-ausencias-js/.idea
+gestion-ausencias-js/.vscode
+gestion-ausencias-js/*.suo
+gestion-ausencias-js/*.ntvs*
+gestion-ausencias-js/*.njsproj
+gestion-ausencias-js/*.sln
+gestion-ausencias-js/*.sw?
