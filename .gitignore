@@ -1,7 +1,7 @@
 .DS_Store
 gestion-ausencias-js/node_modules
 gestion-ausencias-js/dist
-
+backend/node_modules
 
 # local env files
 gestion-ausencias-js/.env.local
