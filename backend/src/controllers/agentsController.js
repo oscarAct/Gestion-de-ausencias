@@ -75,6 +75,30 @@ controller.getAll = (req, res) => {
     });
   }
 };
+controller.getAllActive = (req, res) => {
+  try {
+    Agent.find({ deleted: false, active: true }, (error, response) => {
+      if (error) {
+        return res.status(200).send({
+          status: false,
+          message: "An error ocurred.",
+          error,
+        });
+      } else {
+        return res.status(200).send({
+          status: true,
+          response,
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
 controller.delete = (req, res) => {
   const { id } = req.params;
 
@@ -153,5 +177,56 @@ controller.update = (req, res) => {
       error: error.message,
     });
   }
+};
+controller.deactivate = (req, res) => {
+  try {
+    const { id } = req.params;
+
+    update = {
+      active: false,
+    };
+    update2 = {
+      active: true,
+    };
+
+    Agent.findById({ _id: id }, (error, response) => {
+      if (error) {
+        return res.status(200).send({
+          status: false,
+          message: "An error ocurred.",
+          error: error.message,
+        });
+      } else {
+        if (response.active) {
+          response.active = false;
+        } else {
+          response.active = true;
+        }
+        response.save((err, success) => {
+          if (err) {
+            return res.send({
+              status: false,
+              message: "Failed to save state.",
+            });
+          } else {
+            return res.send({
+              status: true,
+              updatedField: success,
+            });
+          }
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+controller.postImage = (req, res) => {
+  console.log(req.file);
+  return res.status(200).send(true);
 };
 module.exports = controller;

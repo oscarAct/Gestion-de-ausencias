@@ -62,5 +62,27 @@ controller.delete = (req, res) => {
     });
   }
 };
+controller.getAll = (req, res) => {
+  try {
+    Reason.find((err, response) => {
+      if (err) {
+        return res.status(200).send({
+          status: false,
+          error: err.message,
+        });
+      } else {
+        return res.status(200).send({
+          status: true,
+          response,
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(200).send({
+      status: false,
+      error: error.message,
+    });
+  }
+};
 
 module.exports = controller;

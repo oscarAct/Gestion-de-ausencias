@@ -1,11 +1,25 @@
 import $ from "jquery";
-import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import TabulatorComponent from "vue-tabulator";
-import XLSX from "xlsx/dist/xlsx.full.min.js";
-import jsPDF from "jspdf/dist/jspdf.es.min.js";
 import "jspdf-autotable";
 import moment from "moment";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
+
+// Create an instance of Notyf
+const notyf = new Notyf({
+  duration: 4000,
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "success",
+      background: "#18bc9c",
+    },
+  ],
+});
 
 export default {
   name: "agents",
@@ -14,10 +28,25 @@ export default {
   data() {
     return {
       fecha: null,
+      url: process.env.API_URL,
       searchValue: "",
       today: "",
+      user: {
+        id_number: "",
+        name: "",
+        lastName: "",
+        userId: "",
+      },
+      userTU: {
+        _id: "",
+        id_number: "",
+        name: "",
+        lastName: "",
+        userId: "",
+      },
+      mensajeError: "",
       users: [],
-      dados: [],
+      agents: [],
       options: {
         pagination: "local",
         editor: false,
@@ -32,54 +61,69 @@ export default {
           columnCalcs: false, //do not include column calculation rows in download
         },
         columns: [
+          { formatter: "rownum", hozAlign: "center", width: 40 },
           {
             formatter: "responsiveCollapse",
             width: 30,
             minWidth: 30,
-            align: "center",
+            align: "left",
             resizable: false,
             headerSort: false,
           },
           {
             title: "User",
             field: "userId",
-            align: "center",
-            cssClass: "text-center",
-            width: 200,
+            align: "left",
+            width: 90,
             sorter: "number",
             responsive: 0,
           },
           {
+            title: "_id",
+            field: "_id",
+            align: "left",
+            width: 200,
+            sorter: "number",
+            responsive: 0,
+            visible: false,
+          },
+          {
             title: "Cedula",
             field: "id_number",
-            align: "center",
+            align: "left",
             sorter: "number",
           },
           {
             title: "Nombre",
             field: "name",
             responsive: 2,
-            align: "center",
+            align: "left",
             sorter: "string",
           },
 
           {
             title: "Apellidos",
             field: "lastName",
-            align: "center",
+            align: "left",
             sorter: "string",
           },
           {
             title: "Estado",
             field: "active",
-            align: "center",
+            align: "left",
             responsive: 2,
             formatter: this.formatState,
+            cellClick: (e, cell) => {
+              const tabulator = this.$refs.tabulator.getInstance();
+              const id = cell.getRow().getData()._id;
+              let page = tabulator.getPage();
+              this.toggleState(id, page);
+            },
           },
           {
             title: "Creado el",
             field: "createdAt",
-            align: "center",
+            align: "left",
             formatter: this.formatDate,
             sorter: "date",
           },
@@ -90,8 +134,9 @@ export default {
             download: false,
             sortable: false,
             formatter: this.openEditIcon,
-            cellClick: function(e, cell) {
-              console.log(cell.getRow().getData());
+            cellClick: (e, cell) => {
+              const data = cell.getRow().getData();
+              this.showFormUpdate(data);
             },
             editable: false,
           },
@@ -103,14 +148,11 @@ export default {
             download: false,
             formatter: this.openDeleteIcon,
             cellClick: function(e, cell) {
-              $("#eliminar-ausencia").toggleClass("hidden");
-
-              //cell.getRow().delete();
+              const data = cell.getRow().getData()._id;
+              localStorage.setItem("itl", data);
+              $("#eliminar-agente").toggleClass("hidden");
             },
             editable: false,
-            click: function(e, cell, value, data) {
-              console.log(data);
-            },
           },
         ],
       },
@@ -152,24 +194,58 @@ export default {
     },
     downloadCsv() {
       const tabulator = this.$refs.tabulator.getInstance();
-      tabulator.download("csv", "reporte_de_ausencias.csv", { separator: "," });
+      tabulator.download("csv", "lista_de_agentes.csv", { separator: "," });
     },
     downloadXlsx() {
       const tabulator = this.$refs.tabulator.getInstance();
-      tabulator.download("xlsx", "reporte_de_ausencias.xlsx", {
+      tabulator.download("xlsx", "lista_de_agentes.xlsx", {
         sheetName: "Reporte ausencias",
       });
     },
     downloadPdf() {
       const tabulator = this.$refs.tabulator.getInstance();
-      tabulator.download("pdf", "reporte_de_ausencias.pdf");
+      tabulator.download("pdf", "lista_de_agentes.pdf");
     },
     search(data) {
       const tabulator = this.$refs.tabulator.getInstance();
-      console.log(data);
       let field = $("#country").val();
-      console.log(field);
       tabulator.setFilter(field, "like", data);
+    },
+    clearFilters() {
+      const tabulator = this.$refs.tabulator.getInstance();
+      tabulator.clearFilter();
+      tabulator.clearHeaderFilter();
+      this.searchValue = "";
+    },
+    toggleState(id, page) {
+      this.$http
+        .put(
+          "http://localhost:3000/api/agent/deactivate/" + id,
+          { foo: "bar" },
+          {
+            headers: {
+              Authorization:
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            },
+          }
+        )
+        .then((res) => {
+          if (res.body.status) {
+            const indiceElemento = this.agents.findIndex((el) => el._id == id);
+            let newData = [...this.agents];
+            newData[indiceElemento] = {
+              ...newData[indiceElemento],
+              active: res.body.updatedField.active,
+            };
+            this.agents = newData;
+            const tabulator = this.$refs.tabulator.getInstance();
+            setTimeout(() => {
+              tabulator.setPage(page);
+            }, 0);
+          } else {
+            console.error("Fallo al actualizar estado de agente");
+          }
+        });
     },
     getDate() {
       this.today = moment()
@@ -182,40 +258,224 @@ export default {
           .format("L")
       );
     },
-    formatDate(date) {
+    showFormModal() {
+      $("#form-ausencia").toggleClass("hidden");
+    },
+    showFormUpdate(data) {
+      $("#form-update-user").toggleClass("hidden");
+      this.userTU._id = data._id;
+      this.userTU.id_number = data.id_number;
+      this.userTU.name = data.name;
+      this.userTU.lastName = data.lastName;
+      this.userTU.userId = data.userId;
+    },
+    closeFormUpdate() {
+      $("#form-update-user").toggleClass("hidden");
+    },
+    closeDeleteConfirm() {
+      localStorage.removeItem("itl");
+      $("#eliminar-agente").toggleClass("hidden");
+    },
+    closeFormModal() {
+      $("#form-ausencia").toggleClass("fadeOut");
+
+      $("#eliminar-ausencia").toggleClass("fadeOut");
+      setTimeout(() => {
+        $("#form-ausencia").addClass("hidden");
+        $("#form-ausencia").removeClass("fadeOut");
+
+        $("#eliminar-ausencia").addClass("hidden");
+        $("#eliminar-ausencia").removeClass("fadeOut");
+      }, 500);
+    },
+    formatDate(cell) {
+      const date = cell._cell.value;
       return moment(date)
         .locale("es-us")
-        .format("L");
+        .format("LL");
     },
     formatState(cell) {
       let template;
-      const value = cell._cell.value;
-      if (value) {
-        template = `<span
+      try {
+        const value = cell._cell.value;
+        if (value) {
+          template = `<span
           class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-green-800 bg-green-100 rounded-full"
           >Activo</span
         >`;
-      } else {
-        template = `<span
-          class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-red-800 bg-red-100 rounded-full"
+        } else {
+          template = `<span
+          class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-yellow-800 bg-yellow-100 rounded-full"
           >Inactivo</span
         >`;
+        }
+      } catch (error) {
+        return;
       }
+
       return template;
     },
     changeQuantity() {
       this.options.paginationSize = $("#cantidad-registros").val();
     },
+    getName(id_number) {
+      if (id_number.length > 8) {
+        $(".linear-progress-material").toggleClass("hidden");
+        this.$http
+          .get("https://apis.gometa.org/cedulas/" + id_number)
+          .then((res) => {
+            $(".linear-progress-material").toggleClass("hidden");
+            let firstname = res.body.results[0].firstname.toString();
+            let lastname = res.body.results[0].lastname.toString();
+
+            let splitName = firstname.split(" ");
+            let splitLast = lastname.split(" ");
+
+            let finalName = "";
+            let finalLast = "";
+
+            for (let index = 0; index < splitName.length; index++) {
+              const element = splitName[index];
+              finalName += this.camelize(element) + " ";
+              if (index == splitName.length - 1) {
+                this.user.name = finalName.trim();
+              }
+            }
+            for (let index = 0; index < splitLast.length; index++) {
+              const element = splitLast[index];
+              finalLast += this.camelize(element) + " ";
+              if (index == splitLast.length - 1) {
+                this.user.lastName = finalLast.trim();
+              }
+            }
+          });
+      } else {
+      }
+    },
+    saveAgent(user) {
+      $(".linear-progress-material").toggleClass("hidden");
+      if (
+        user.id_number.trim() == "" ||
+        user.name.trim() == "" ||
+        user.userId.trim() == "" ||
+        user.lastName.trim() == ""
+      ) {
+        this.mensajeError = "Favor completar todos los campos.";
+        $(".empty-inputs").removeClass("hidden");
+      } else {
+        $(".empty-inputs").addClass("hidden");
+        this.$http
+          .post("http://localhost:3000/api/agent/save", user, {
+            headers: {
+              Authorization:
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            },
+          })
+          .then((res) => {
+            $(".linear-progress-material").toggleClass("hidden");
+            if (res.body.status) {
+              this.closeFormModal();
+              this.loadAgents();
+              this.user.name = "";
+              this.user.id_number = "";
+              this.user.lastName = "";
+              this.user.userId = "";
+              notyf.success("Registro correcto.");
+            } else {
+              this.mensajeError =
+                "Ha ocurrido un error a la hora de registrar el usuario. Reintentalo";
+              $(".empty-inputs").removeClass("hidden");
+            }
+          });
+      }
+    },
+    updateAgent(user) {
+      $(".linear-progress-material").toggleClass("hidden");
+      if (
+        user.id_number.trim() == "" ||
+        user.name.trim() == "" ||
+        user.userId.trim() == "" ||
+        user.lastName.trim() == ""
+      ) {
+        $(".linear-progress-material").toggleClass("hidden");
+        this.mensajeError = "Favor completar todos los campos.";
+        $(".empty-inputs").removeClass("hidden");
+      } else {
+        $(".empty-inputs").addClass("hidden");
+        this.$http
+          .put("http://localhost:3000/api/agent/update/" + user._id, user, {
+            headers: {
+              Authorization:
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            },
+          })
+          .then((res) => {
+            $(".linear-progress-material").toggleClass("hidden");
+            if (res.body.status) {
+              this.closeFormUpdate();
+              this.loadAgents();
+              this.userTU.name = "";
+              this.userTU.id_number = "";
+              this.userTU.lastName = "";
+              this.userTU.userId = "";
+              notyf.success("Agente actualizado.");
+            } else {
+              this.mensajeError =
+                "Ha ocurrido un error a la hora de registrar el usuario. Reintentalo";
+              $(".empty-inputs").removeClass("hidden");
+            }
+          });
+      }
+    },
+    deleteAgent() {
+      this.$http
+        .put(
+          "http://localhost:3000/api/agent/delete/" +
+            localStorage.getItem("itl"),
+          { foo: "bar" },
+          {
+            headers: {
+              Authorization:
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          if (res.body.status) {
+            this.loadAgents();
+            this._idToDelete = "";
+            this.closeDeleteConfirm();
+            notyf.success("Agente eliminado.");
+            localStorage.removeItem("itl");
+          } else {
+            this._idToDelete = "";
+            this.closeDeleteConfirm();
+            notyf.error("Ha ocurrido un error. Prueba reintentando.");
+            localStorage.removeItem("itl");
+          }
+        });
+    },
+    camelize(str) {
+      return str
+        .replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+          return index === 0 ? word.toUpperCase() : word.toLowerCase();
+        })
+        .replace(/\s+/g, "");
+    },
+    loadAgents() {
+      this.$http
+        .get("http://localhost:3000/api/agent/getAll", {
+          headers: {
+            Authorization:
+              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+          },
+        })
+        .then((res) => (this.agents = res.body.response));
+    },
   },
   created() {
-    this.$http
-      .get("http://localhost:3000/api/agent/getAll", {
-        headers: {
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
-        },
-      })
-      .then((res) => (this.dados = res.body.response));
+    this.loadAgents();
     this.getDate();
   },
 };

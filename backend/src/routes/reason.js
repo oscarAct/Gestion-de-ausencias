@@ -7,6 +7,7 @@ const router = express.Router();
 // User routes
 
 router.post("/reason/save", midAuth.authenticated, reasonController.save);
+router.get("/reason/getAll", midAuth.authenticated, reasonController.getAll);
 router.put(
   "/reason/delete/:id",
   midAuth.authenticated,
