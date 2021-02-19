@@ -81,7 +81,9 @@ controller.login = (req, res) => {
     }
 
     if (!user) {
-      return res.status(404).send({ message: "User does not exists" });
+      return res
+        .status(200)
+        .send({ status: false, message: "User does not exists" });
     }
 
     if (user.deleted) {
@@ -101,7 +103,10 @@ controller.login = (req, res) => {
         // Creating token (jwt library)
         if (params.gettoken) {
           return res.status(200).send({
+            status: true,
             token: jwt.createToken(user),
+            name: user.name + " " + user.surname,
+            initials: user.initials,
           });
         }
         // this line is using for removing the password in the user object so in that way the password will not be sent through the internet response
@@ -119,12 +124,68 @@ controller.login = (req, res) => {
     });
   });
 };
-controller.setFixedIcomes = (req, res) => {
-  const amount = req.body.amount;
-  const date = req.body.date;
+controller.setProfilePhoto = (req, res) => {
+  try {
+    const { url } = req.body;
+    if (!url) {
+      return res.status(200).send({
+        status: false,
+        message: "Missing require fields.",
+      });
+    }
+    const update = {
+      profilePhoto: url,
+    };
 
-  if (!date || !amount) {
-    return res.send({ status: false, message: "Missing Data." });
+    User.findByIdAndUpdate(
+      { _id: req.user.id },
+      update,
+      { new: true },
+      (err, response) => {
+        if (err) {
+          return res.status(200).send({
+            status: false,
+            message: "Failed saving the data.",
+          });
+        } else {
+          return res.status(200).send({
+            status: true,
+            message: "User updated successfully.",
+          });
+        }
+      }
+    );
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+controller.getUserInfo = (req, res) => {
+  try {
+    User.findById({ _id: req.user.id })
+      .select(["name", "surname", "profilePhoto", "email", "profilePhoto"])
+      .exec((err, response) => {
+        if (err) {
+          return res.status(200).send({
+            status: false,
+            message: "Failed retrieving the data.",
+          });
+        } else {
+          return res.status(200).send({
+            status: true,
+            response,
+          });
+        }
+      });
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
 module.exports = controller;

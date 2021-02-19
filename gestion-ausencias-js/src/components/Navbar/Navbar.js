@@ -3,11 +3,21 @@ export default {
   components: {},
   props: [],
   data() {
-    return {};
+    return {
+      imgURL: "",
+      token: localStorage.getItem("token"),
+      initials: localStorage.getItem("initials"),
+      fullName: localStorage.getItem("name"),
+      profilePhoto: localStorage.getItem("profilePhoto"),
+    };
   },
   computed: {},
   mounted() {},
-  methods: {},
+  methods: {
+    showMenu() {
+      $("#profile-menu").fadeToggle(100);
+    },
+  },
 };
 import $ from "jquery";
 

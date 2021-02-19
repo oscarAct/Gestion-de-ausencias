@@ -11,12 +11,13 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import firebase from "firebase";
 import { Notyf } from "notyf";
+import data from "../enviroments/development.config";
 
 //css dependencies
 
 import "vue2-datepicker/index.css";
 import "@desislavsd/vue-select/dist/vue-select.css";
-import "filepond/dist/filepond.min.css";
+import "filepond/dist/filepond.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
 import "notyf/notyf.min.css";
 
@@ -30,21 +31,25 @@ const FilePond = vueFilePond(
   FilePondPluginFileValidateType,
   FilePondPluginImagePreview
 );
+
 // Create an instance of Notyf
 const notyf = new Notyf({
   duration: 4000,
   position: {
-    x: "center",
+    x: "right",
     y: "top",
   },
   types: [
     {
       type: "success",
-      background: "#18bc9c",
+      background: "#67c23a",
+    },
+    {
+      type: "error",
+      background: "#f56c6c",
     },
   ],
 });
-
 window.jsPDF = jsPDF;
 window.XLSX = XLSX;
 export default {
@@ -59,7 +64,11 @@ export default {
   data() {
     return {
       myFiles: [],
+      todayAbsences: "",
+      token: "Bearer " + localStorage.getItem("token"),
       fecha: null,
+      API_URL: data.BASE_API_URL,
+      imgViewerURL: "",
       newAbsence: {
         agent: "",
         reason: "",
@@ -67,6 +76,7 @@ export default {
         from: "",
         until: "",
         proof: "",
+        proofName: "",
       },
       searchValue: "",
       imgURL: "",
@@ -76,6 +86,7 @@ export default {
         process: (fieldName, file, metadata, load, error, progress, abort) => {
           const fileUpload = file;
           const name = Math.floor(Math.random() * 84000) + "-" + file.name;
+          this.newAbsence.proofName = name;
           const storageRef = firebase
             .storage()
             .ref(`absences/absences-photos/${name}`);
@@ -85,7 +96,6 @@ export default {
           task.on(
             "state_changed",
             (snap) => {
-              let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
               progress(true, file.size, snap.bytesTransferred);
             },
             (err) => {
@@ -99,13 +109,6 @@ export default {
             }
           );
         },
-      },
-      newAbsence: {
-        agent: "",
-        reason: "",
-        description: "",
-        from: "",
-        until: "",
       },
       selected: "",
       today: "",
@@ -140,6 +143,15 @@ export default {
             headerSort: false,
           },
           {
+            title: "_id",
+            field: "_id",
+            align: "left",
+            width: 200,
+            sorter: "number",
+            responsive: 0,
+            visible: false,
+          },
+          {
             title: "Nombre",
             field: "agent.name",
             width: 200,
@@ -159,6 +171,21 @@ export default {
           },
           { title: "Descripcion", field: "description", responsive: 2 },
           {
+            title: "Comprobante",
+            field: "proof",
+            responsive: 2,
+            formatter: this.formatPhoto,
+            cellClick: function(e, cell) {
+              const data = cell.getRow().getData();
+              if (data.proof != "") {
+                $(".img-viewer").fadeToggle(200);
+                $("#proof").attr("src", data.proof);
+              } else {
+                return;
+              }
+            },
+          },
+          {
             title: "Fecha inicio",
             formatter: this.formatDate,
             field: "from",
@@ -175,24 +202,12 @@ export default {
             title: "",
             width: 60,
             responsive: 0,
-            download: false,
-            sortable: false,
-            formatter: this.openEditIcon,
-            cellClick: function(e, cell) {
-              const data = cell.getRow().getData();
-            },
-            editable: false,
-          },
-          {
-            title: "",
-            width: 60,
-            responsive: 0,
             sortable: false,
             download: false,
             formatter: this.openDeleteIcon,
             cellClick: function(e, cell) {
               $("#eliminar-ausencia").toggleClass("hidden");
-
+              localStorage.setItem("del-absence", cell.getRow().getData()._id);
               //cell.getRow().delete();
             },
             editable: false,
@@ -207,6 +222,14 @@ export default {
     setDate() {
       this.newAbsence.from = moment(this.fecha[0]).format("MM/DD/yyyy");
       this.newAbsence.until = moment(this.fecha[1]).format("MM/DD/yyyy");
+    },
+    formatPhoto(cell) {
+      const value = cell._cell.value;
+      if (value == "") {
+        return "Sin comprobante";
+      } else {
+        return `<img src="${value}" width="30px" alt="imagen no carga" />`;
+      }
     },
     openEditIcon(value, data, cell, row, options) {
       let element = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5 text-blue-400 mx-auto hover:text-blue-500 ml-5 editRow" v-on:click="showMessage" viewBox="0 0 24 24" stroke="currentColor">
@@ -241,6 +264,9 @@ export default {
       const pond = this.$refs.pond;
       pond.getFiles();
     },
+    closeViewer() {
+      $(".img-viewer").fadeToggle(200);
+    },
     downloadCsv() {
       const tabulator = this.$refs.tabulator.getInstance();
       tabulator.download("csv", "reporte_de_ausencias.csv", { separator: "," });
@@ -274,21 +300,45 @@ export default {
     changeQuantity() {
       this.options.paginationSize = $("#cantidad-registros").val();
     },
+    deleteAbsence() {
+      const id = localStorage.getItem("del-absence");
+      this.$http
+        .put(
+          this.API_URL + "absence/delete/" + id,
+          { foo: "bar" },
+          {
+            headers: {
+              Authorization: this.token,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.body.status) {
+            this.loadAbsences();
+            this.closeModals();
+            this.loadTodayAbsences();
+            notyf.success("Registro eliminado correctamente.");
+            localStorage.removeItem("del-absence");
+          } else {
+            notyf.error("Ha ocurrido un error al procesar la solicitud.");
+          }
+        });
+    },
     loadAbsences() {
       this.$http
-        .get("http://localhost:3000/api/absence/getAll", {
+        .get(this.API_URL + "absence/getAll", {
           headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            Authorization: this.token,
           },
         })
         .then((res) => {
           this.absences = res.body.response;
         });
     },
-    setId(e, f) {
+    setId(e) {
       this.newAbsence.agent = e.index;
     },
+    hideImgViewer() {},
     showFormModal() {
       $("#form-ausencia").toggleClass("hidden");
     },
@@ -306,6 +356,7 @@ export default {
       }
     },
     closeModals() {
+      localStorage.removeItem("del-absence");
       $("#form-ausencia").toggleClass("fadeOut");
 
       $("#eliminar-ausencia").toggleClass("fadeOut");
@@ -343,16 +394,16 @@ export default {
       } else {
         $(".linear-progress-material").toggleClass("hidden");
         this.$http
-          .post("http://localhost:3000/api/absence/save", data, {
+          .post(this.API_URL + "absence/save", data, {
             headers: {
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+              Authorization: this.token,
             },
           })
           .then((res) => {
             $(".linear-progress-material").toggleClass("hidden");
             if (res.body.status) {
               this.closeFormModal();
+              this.loadTodayAbsences();
               this.loadAbsences();
               this.clearForm();
               notyf.success("Ausencia registrada con exito.");
@@ -364,10 +415,9 @@ export default {
     },
     loadAgents() {
       this.$http
-        .get("http://localhost:3000/api/agent/getAllActive", {
+        .get(this.API_URL + "agent/getAllActive", {
           headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            Authorization: this.token,
           },
         })
         .then((res) => {
@@ -389,10 +439,9 @@ export default {
     },
     loadReasons() {
       this.$http
-        .get("http://localhost:3000/api/reason/getAll", {
+        .get(this.API_URL + "reason/getAll", {
           headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            Authorization: this.token,
           },
         })
         .then((res) => {
@@ -403,23 +452,33 @@ export default {
           }
         });
     },
+    loadTodayAbsences() {
+      this.$http
+        .get(this.API_URL + "absence/getTodayAbsences", {
+          headers: {
+            Authorization: this.token,
+          },
+        })
+        .then((res) => {
+          if (res.body.status) {
+            console.log(res.body.response);
+            this.todayAbsences = res.body.response;
+          } else {
+            console.error("No absences for today.");
+          }
+        });
+    },
+    dateFormatter(value) {
+      return moment(value).format("DD/MM/yyyy");
+    },
   },
   created() {
+    this.loadTodayAbsences();
     this.loadAbsences();
     this.getDate();
     this.loadAgents();
     this.loadReasons();
-    var firebaseConfig = {
-      apiKey: "AIzaSyAhltvhQkduoenbTMoEwLRaQwQGPee_aJk",
-      authDomain: "gestor-de-archivos-34c41.firebaseapp.com",
-      projectId: "gestor-de-archivos-34c41",
-      storageBucket: "gestor-de-archivos-34c41.appspot.com",
-      messagingSenderId: "1053688780427",
-      appId: "1:1053688780427:web:cef8490eff6889ba2ca68e",
-      measurementId: "G-XJ5Z68RGW6",
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(data.FB_CONFIG);
     firebase.analytics();
   },
 };

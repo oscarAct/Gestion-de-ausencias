@@ -1,585 +1,656 @@
-<div class="container p-5 items-center mx-auto">
-  <!-- This example requires Tailwind CSS v2.0+ -->
-  <div class="lg:flex lg:items-center lg:justify-between mb-5">
-    <div class="flex-1 min-w-0">
-      <div
-        class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6"
-      >
-        <div class="mt-2 flex items-center text-sm text-gray-500">
-          <!-- Heroicon name: solid/calendar -->
-          <svg
-            class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-              clip-rule="evenodd"
-            /></svg
-          ><span> {{ today }} </span>
-        </div>
-      </div>
-    </div>
-    <div class="mt-5 flex lg:mt-0 lg:ml-4">
-      <span class="sm:ml-3">
-        <button
-          type="button"
-          id="agregar-ausencia"
-          v-on:click="showFormModal()"
-          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="ml-1 mr-2 w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
-          Ausencia programada
-        </button>
-      </span>
-    </div>
-  </div>
-  <div class="py-5">
-    <main class="h-full overflow-y-auto">
-      <div class="container mx-auto grid">
-        <!-- Cards -->
-        <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-          <!-- Card -->
-          <div class="flex items-center p-4 shadow bg-white rounded-lg">
-            <div class="p-3 mr-4 text-yellow-500 bg-yellow-100 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 text-yellow-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-                />
-              </svg>
-            </div>
-            <div>
-              <p class="mb-2 text-md font-medium text-gray-600">
-                <span class="font-bold">Maria Fernanda Acosta</span>
-              </p>
-              <p class="text-sm text-left text-gray-500">
-                Vacaciones
-              </p>
-              <p class="text-sm text-left font-semibold text-gray-500">
-                Días 10
-              </p>
-            </div>
-          </div>
-          <!-- Card -->
-          <div
-            class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-          >
-            <div
-              class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500"
-            >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </div>
-            <div>
-              <p
-                class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400"
-              >
-                My Forum Posts
-              </p>
-              <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                24
-              </p>
-            </div>
-          </div>
-          <!-- Card -->
-          <div
-            class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-          >
-            <div
-              class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500"
-            >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </div>
-            <div>
-              <p
-                class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400"
-              >
-                My Tutorials
-              </p>
-              <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                376
-              </p>
-            </div>
-          </div>
-          <!-- Card -->
-          <div
-            class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-          >
-            <div
-              class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500"
-            >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-                ></path>
-              </svg>
-            </div>
-            <div>
-              <p
-                class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400"
-              >
-                My Purchases
-              </p>
-              <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                35
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-  <!-- This example requires Tailwind CSS v2.0+ -->
-  <div class="bg-main shadow-lg">
-    <div class="relative text-left w-100 mt-5">
-      <div class="bg-main p-4">
-        <span class="mr-3 text-sm">Mostrar</span>
-        <select
-          id="cantidad-registros"
-          name="country"
-          v-on:change="changeQuantity"
-          autocomplete="country"
-          class="minimal mt-1 block mb-1 md:w-32 lg:w-32 xl:w-20 w-full inline-flex mr-2 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          <option value="10" selected>10</option>
-          <option value="15">15</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-        <span class="mr-3 text-sm">Columna</span>
-        <select
-          id="country"
-          name="country"
-          autocomplete="country"
-          class="minimal mt-1 block mb-1 md:w-40 lg:w-40 xl:w-40 w-full inline-flex mr-2 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          <option value="name">Nombre</option>
-          <option value="company.name">Motivo</option>
-          <option value="">Descripción</option>
-          <option value="">Fecha incio</option>
-          <option value="">Fecha fin</option>
-        </select>
-        <span class="mr-3 text-sm">Valor</span>
-        <input
-          type="text"
-          id="filter-value"
-          v-on:keyup="search(searchValue)"
-          v-model="searchValue"
-          placeholder="Escribe para filtrar"
-          class="shadow-sm p-2 mt-1 inline-flex focus:ring-indigo-500 border border-gray-300 ml-auto focus:border-indigo-400 focus:outline-none block md:w-52 lg:w-52 xl:w-52 w-full sm:text-sm border-gray-300 rounded-md"
-        />
-        <button
-          type="button"
-          class="float-right z-10 inline-flex md:mt-1 lg:mt-1 xl:mt-1 mt-5 relative mb-0 justify-center md:w-52 lg:w-52 xl:w-52 w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-          id="options-menu"
-          v-on:click="ShowExportOptions()"
-        >
-          <svg
-            class="w-5 h-5 mr-2 text-gray-500"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-          Exportar datos
-          <!-- Heroicon name: solid/chevron-down -->
-          <svg
-            class="-mr-1 ml-2 h-5 w-5"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
-      <div
-        class="hidden origin-top-right z-10 absolute right-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-        id="download-menu"
-      >
-        <div
-          class="py-1"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="options-menu"
-        >
-          <button
-            type="submit"
-            class="inline-flex w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
-            role="menuitem"
-            id="download-xlxs"
-            v-on:click="downloadXlsx"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-            <span class="ml-2">Exportar XLSX</span>
-          </button>
-          <button
-            type="submit"
-            class="inline-flex w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
-            role="menuitem"
-            v-on:click="downloadCsv"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-            <span class="ml-2">Exportar CSV</span>
-          </button>
-          <button
-            type="submit"
-            class="inline-flex w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
-            role="menuitem"
-            v-on:click="downloadPdf"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              class="w-5 h-5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-            <span class="ml-2">Exportar PDF</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <Vue-Tabulator
-      v-model="absences"
-      class="table-striped text-sm"
-      :options="options"
-      ref="tabulator"
+<div class="w-full">
+  <div class="loader hidden"></div>
+
+  <div class="img-viewer hidden" v-on:click="hideImgViewer()">
+    <svg
+      class="close-viewer w-10 text-white ml-auto mr-5 mt-5 pointer"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      v-on:click="closeViewer()"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <img
+      src=""
+      alt="Imagen no disponible"
+      width="35%"
+      class="img-centered"
+      id="proof"
     />
   </div>
-
-  <div
-    class="fixed inset-0 transition-opacity hidden"
-    id="backdrop-bg"
-    v-on:click="closeExportOptions()"
-  >
-    <div
-      class="absolute inset-0 bg-gray-500 opacity-40 backdrop-close"
-      v-on:click="closeModals()"
-    ></div>
-  </div>
-  <div
-    class="fixed z-10 inset-0 overflow-y-auto hidden animated fadeIn faster"
-    id="form-ausencia"
-  >
-    <div
-      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-    >
-      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+  <div class="container p-5 items-center mx-auto">
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div class="lg:flex lg:items-center lg:justify-between mb-5">
+      <div class="flex-1 min-w-0">
         <div
-          class="absolute inset-0 bg-gray-500 opacity-75 backdrop-close"
-          v-on:click="closeModals()"
-        ></div>
+          class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6"
+        >
+          <div class="mt-2 flex items-center text-sm text-gray-500">
+            <!-- Heroicon name: solid/calendar -->
+            <svg
+              class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                clip-rule="evenodd"
+              /></svg
+            ><span> {{ today }} </span>
+          </div>
+        </div>
       </div>
-
-      <!-- This element is to trick the browser into centering the modal contents. -->
-      <span
-        class="hidden sm:inline-block align-top sm:h-screen overflow-hidden"
-        aria-hidden="true"
-        >&#8203;</span
-      >
-      <div
-        class="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 align-top w-full xl:w-2/5 lg:w-2/5 md:w-1/2 h-4/5 lg:h-1/2 xl:h-1/2 md:h-1/2"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-headline"
-      >
-        <div class="bg-white pb-4">
-          <div class="linear-progress-material hidden">
-            <div class="bar bar1"></div>
-            <div class="bar bar2"></div>
-          </div>
-          <div class="mt-5 md:mt-0 md:col-span-2">
-            <form action="#" method="POST">
-              <div class="overflow-hidden sm:rounded-md">
-                <div class="px-4 py-5 bg-white sm:p-6">
-                  <div class="grid grid-cols-6 gap-6">
-                    <div class="col-start-1 col-end-7">
-                      <label
-                        for="first_name"
-                        class="block text-sm font-medium text-gray-700"
-                        >Agente *</label
-                      >
-                      <div class="col-span-6 sm:col-span-3">
-                        <v-select
-                          v-model="newAbsence.agent"
-                          :from="agents"
-                          placeholder="Seleccionar agente"
-                          as="name::id"
-                          @change="setId($event, $event.raw)"
-                          class="mt-1 block minimal w-full py-0 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm"
-                        ></v-select>
-                      </div>
-                    </div>
-
-                    <div class="col-start-1 col-end-4">
-                      <label
-                        for="last_name"
-                        class="block text-sm font-medium text-gray-700"
-                        >Motivo *</label
-                      >
-                      <div class="col-span-6 sm:col-span-3">
-                        <select
-                          id="agent"
-                          name="country"
-                          v-model="newAbsence.reason"
-                          autocomplete="country"
-                          class="mt-1 block minimal w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm"
-                        >
-                          <option v-for="reason in reasons" :value="reason._id"
-                            >{{ reason.name }}</option
-                          >
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-start-4 col-end-7">
-                      <label
-                        for="country"
-                        class="block text-sm font-medium text-gray-700"
-                        >Rango de fechas *</label
-                      >
-                      <div>
-                        <date-picker
-                          class="bg-transparent w-full"
-                          v-model="fecha"
-                          range
-                          format="DD/MM/YYYY"
-                          @change="setDate()"
-                          range-separator=" - "
-                          placeholder="Desde - Hasta"
-                          input-class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm"
-                        ></date-picker>
-                      </div>
-                    </div>
-                    <div class="col-span-6 sm:col-span-6">
-                      <label
-                        for="email_address"
-                        class="block text-sm font-medium text-gray-700"
-                        >Descripción</label
-                      >
-                      <div class="mt-1">
-                        <textarea
-                          id="about"
-                          name="about"
-                          v-model="newAbsence.description"
-                          rows="2"
-                          class="shadow-sm p-3 focus:ring-indigo-500 border border-gray-300 focus:border-indigo-400 focus:outline-none mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
-                          placeholder="you@example.com"
-                        ></textarea>
-                      </div>
-                      <p class="mt-2 text-sm text-gray-500">
-                        Breve descripción. (Si Aplica)
-                      </p>
-                    </div>
-                    <div class="col-span-6 sm:col-span-6">
-                      <label
-                        for="email_address"
-                        class="block text-sm font-medium text-gray-700"
-                        >Imagen comprobante</label
-                      >
-                      <div class="mt-1">
-                        <file-pond
-                          name="test"
-                          ref="pond"
-                          class-name="my-pond"
-                          label-idle="Arrastra y suelta imagenes aquí..."
-                          allow-multiple="false"
-                          max-files="1"
-                          :server="server"
-                          instantUpload="false"
-                          accepted-file-types="image/jpeg, image/png, image/jpg"
-                          v-bind:files="myFiles"
-                          v-on:init="handleFilePondInit()"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <div class="container mx-auto">
-            <button
-              type="button"
-              v-on:click="closeFormModal()"
-              class="sm-mr-2 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:text-sm"
+      <div class="mt-5 flex lg:mt-0 lg:ml-4">
+        <span class="sm:ml-3">
+          <button
+            type="button"
+            id="agregar-ausencia"
+            v-on:click="showFormModal()"
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="ml-1 mr-2 w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              id="show-date"
-              v-on:click="saveAbsence(newAbsence)"
-              class="justify-center rounded-md border border-transparent shadow-sm px-4 py-2  bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 sm:ml-3 sm:text-sm"
-            >
-              Confirmar
-            </button>
-          </div>
-        </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+            Ausencia programada
+          </button>
+        </span>
       </div>
     </div>
-  </div>
-  <!-- This example requires Tailwind CSS v2.0+ -->
-  <div
-    class="fixed z-10 inset-0 overflow-y-auto animated fadeIn faster hidden"
-    id="eliminar-ausencia"
-  >
-    <div
-      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-    >
-      <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-        <div
-          class="absolute inset-0 bg-gray-500 opacity-75 backdrop-close"
-          v-on:click="closeModals()"
-        ></div>
-      </div>
-
-      <!-- This element is to trick the browser into centering the modal contents. -->
-      <span
-        class="hidden sm:inline-block sm:align-middle sm:h-screen"
-        aria-hidden="true"
-        >&#8203;</span
-      >
-      <div
-        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-top sm:max-w-lg sm:w-full"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-headline"
-      >
-        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <div
-              class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
-            >
-              <svg
-                class="h-6 w-6 text-red-600"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
+    <div class="py-5">
+      <div class="bg-indigo-600 rounded-lg" v-if="todayAbsences == ''">
+        <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between flex-wrap">
+            <div class="w-0 flex-1 flex items-center">
+              <span class="flex p-2 rounded-lg bg-indigo-800">
+                <!-- Heroicon name: outline/speakerphone -->
+                <svg
+                  class="h-6 w-6 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
+                  />
+                </svg>
+              </span>
+              <p class="ml-3 font-medium text-white truncate">
+                <span class="md:hidden">
+                  We announced a new product!
+                </span>
+                <span class="hidden md:inline">
+                  ¡No se registran ausencias para el día de hoy!
+                </span>
+              </p>
             </div>
-            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-              <h3
-                class="text-lg leading-6 font-medium text-gray-900"
-                id="modal-headline"
+          </div>
+        </div>
+      </div>
+      <main class="h-full overflow-y-auto">
+        <div class="container mx-auto grid">
+          <!-- Cards -->
+          <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+            <!-- Card -->
+            <div
+              class="flex items-center p-4 shadow bg-white rounded-lg"
+              v-for="absence in todayAbsences"
+            >
+              <div
+                class="p-3 mr-4 text-yellow-500 bg-yellow-100 rounded-full"
+                v-if="absence.reason.name == 'Vacaciones'"
               >
-                Eliminar registro
-              </h3>
-              <div class="mt-2">
-                <p class="text-sm text-gray-500">
-                  ¿Estas seguro de querer eliminar este registro?
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-yellow-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-3 mr-4 text-red-500 bg-red-100 rounded-full"
+                v-if="absence.reason.name == 'Cita medica'"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="text-red-500 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full"
+                v-if="absence.reason.name == 'Incapacidad'"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  class="text-blue-500 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 2.5C5.44772 2.5 5 2.94772 5 3.5V5.5C5 6.05228 5.44772 6.5 6 6.5C6.55228 6.5 7 6.05228 7 5.5V3.5C7 2.94772 6.55228 2.5 6 2.5Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M13 21.5C15.973 21.5 18.441 19.3377 18.917 16.5H19C21.2091 16.5 23 14.7091 23 12.5C23 10.2909 21.2091 8.5 19 8.5V7.5H1V15.5C1 18.8137 3.68629 21.5 7 21.5H13ZM3 9.5V15.5C3 17.7091 4.79086 19.5 7 19.5H13C15.2091 19.5 17 17.7091 17 15.5V9.5H3ZM21 12.5C21 13.6046 20.1046 14.5 19 14.5V10.5C20.1046 10.5 21 11.3954 21 12.5Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M9 3.5C9 2.94772 9.44771 2.5 10 2.5C10.5523 2.5 11 2.94772 11 3.5V5.5C11 6.05228 10.5523 6.5 10 6.5C9.44771 6.5 9 6.05228 9 5.5V3.5Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M14 2.5C13.4477 2.5 13 2.94772 13 3.5V5.5C13 6.05228 13.4477 6.5 14 6.5C14.5523 6.5 15 6.05228 15 5.5V3.5C15 2.94772 14.5523 2.5 14 2.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <div
+                class="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full"
+                v-if="absence.reason.name == 'Otro'"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  class="w-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-600 text-left">
+                  <span class="font-bold"
+                    >{{ absence.agent.name }} {{ absence.agent.lastName }}</span
+                  >
+                </p>
+                <p class="text-sm text-left text-gray-500">
+                  {{ absence.reason.name }}
+                </p>
+                <p class="text-sm text-left text-gray-500">
+                  <span class="font-semibold">Desde:</span> {{
+                  dateFormatter(absence.from) }}
+                  <br />
+                  <span class="font-semibold">Hasta:</span> {{
+                  dateFormatter(absence.until) }}
                 </p>
               </div>
             </div>
           </div>
         </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button
-            type="button"
-            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+      </main>
+    </div>
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div class="bg-main shadow-lg">
+      <div class="relative text-left w-100 mt-5">
+        <div class="bg-main p-4">
+          <span class="mr-3 text-sm">Mostrar</span>
+          <select
+            id="cantidad-registros"
+            name="country"
+            v-on:change="changeQuantity"
+            autocomplete="country"
+            class="minimal mt-1 block mb-1 md:w-32 lg:w-32 xl:w-20 w-full inline-flex mr-2 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
-            Eliminar
-          </button>
+            <option value="10" selected>10</option>
+            <option value="15">15</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span class="mr-3 text-sm">Columna</span>
+          <select
+            id="country"
+            name="country"
+            autocomplete="country"
+            class="minimal mt-1 block mb-1 md:w-40 lg:w-40 xl:w-40 w-full inline-flex mr-2 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="agent.name">Nombre</option>
+            <option value="reason">Motivo</option>
+            <option value="description">Descripción</option>
+            <option value="from">Fecha incio</option>
+            <option value="until">Fecha fin</option>
+          </select>
+          <span class="mr-3 text-sm">Valor</span>
+          <input
+            type="text"
+            id="filter-value"
+            v-on:keyup="search(searchValue)"
+            v-model="searchValue"
+            placeholder="Escribe para filtrar"
+            class="shadow-sm p-2 mt-1 inline-flex focus:ring-indigo-500 border border-gray-300 ml-auto focus:border-indigo-400 focus:outline-none block md:w-52 lg:w-52 xl:w-52 w-full sm:text-sm border-gray-300 rounded-md"
+          />
           <button
             type="button"
+            class="float-right z-10 inline-flex md:mt-1 lg:mt-1 xl:mt-1 mt-5 relative mb-0 justify-center md:w-52 lg:w-52 xl:w-52 w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+            id="options-menu"
+            v-on:click="ShowExportOptions()"
+          >
+            <svg
+              class="w-5 h-5 mr-2 text-gray-500"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            Exportar datos
+            <!-- Heroicon name: solid/chevron-down -->
+            <svg
+              class="-mr-1 ml-2 h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="hidden origin-top-right z-10 absolute right-0 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+          id="download-menu"
+        >
+          <div
+            class="py-1"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="options-menu"
+          >
+            <button
+              type="submit"
+              class="inline-flex w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
+              role="menuitem"
+              id="download-xlxs"
+              v-on:click="downloadXlsx"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span class="ml-2">Exportar XLSX</span>
+            </button>
+            <button
+              type="submit"
+              class="inline-flex w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
+              role="menuitem"
+              v-on:click="downloadCsv"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span class="ml-2">Exportar CSV</span>
+            </button>
+            <button
+              type="submit"
+              class="inline-flex w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
+              role="menuitem"
+              v-on:click="downloadPdf"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span class="ml-2">Exportar PDF</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <Vue-Tabulator
+        v-model="absences"
+        class="table-striped text-sm"
+        :options="options"
+        ref="tabulator"
+      />
+    </div>
+
+    <div
+      class="fixed inset-0 transition-opacity hidden"
+      id="backdrop-bg"
+      v-on:click="closeExportOptions()"
+    >
+      <div
+        class="absolute inset-0 bg-gray-500 opacity-40 backdrop-close"
+        v-on:click="closeModals()"
+      ></div>
+    </div>
+    <div
+      class="fixed z-10 inset-0 overflow-y-auto hidden animated fadeIn faster"
+      id="form-ausencia"
+    >
+      <div
+        class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      >
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div
+            class="absolute inset-0 bg-gray-500 opacity-75 backdrop-close"
             v-on:click="closeModals()"
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-          >
-            Cancelar
-          </button>
+          ></div>
+        </div>
+
+        <!-- This element is to trick the browser into centering the modal contents. -->
+        <span
+          class="hidden sm:inline-block align-top sm:h-screen overflow-hidden"
+          aria-hidden="true"
+          >&#8203;</span
+        >
+        <div
+          class="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 align-top w-full xl:w-2/5 lg:w-2/5 md:w-1/2 h-4/5 lg:h-1/2 xl:h-1/2 md:h-1/2"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-headline"
+        >
+          <div class="bg-white pb-4">
+            <div class="linear-progress-material hidden">
+              <div class="bar bar1"></div>
+              <div class="bar bar2"></div>
+            </div>
+            <div class="mt-5 md:mt-0 md:col-span-2">
+              <form action="#" method="POST">
+                <div class="overflow-hidden sm:rounded-md">
+                  <div class="px-4 py-5 bg-white sm:p-6">
+                    <div class="grid grid-cols-6 gap-6">
+                      <div class="col-start-1 col-end-7">
+                        <label
+                          for="first_name"
+                          class="block text-sm font-medium text-gray-700"
+                          >Agente *</label
+                        >
+                        <div class="col-span-6 sm:col-span-3">
+                          <v-select
+                            v-model="newAbsence.agent"
+                            :from="agents"
+                            placeholder="Seleccionar agente"
+                            as="name::id"
+                            @change="setId($event)"
+                            class="mt-1 block minimal w-full py-0 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm"
+                          ></v-select>
+                        </div>
+                      </div>
+
+                      <div class="col-start-1 col-end-4">
+                        <label
+                          for="last_name"
+                          class="block text-sm font-medium text-gray-700"
+                          >Motivo *</label
+                        >
+                        <div class="col-span-6 sm:col-span-3">
+                          <select
+                            id="agent"
+                            name="country"
+                            v-model="newAbsence.reason"
+                            autocomplete="country"
+                            class="mt-1 block minimal w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm"
+                          >
+                            <option
+                              v-for="reason in reasons"
+                              :value="reason._id"
+                              >{{ reason.name }}</option
+                            >
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-start-4 col-end-7">
+                        <label
+                          for="country"
+                          class="block text-sm font-medium text-gray-700"
+                          >Rango de fechas *</label
+                        >
+                        <div>
+                          <date-picker
+                            class="bg-transparent w-full"
+                            v-model="fecha"
+                            range
+                            format="DD/MM/YYYY"
+                            @change="setDate()"
+                            range-separator=" - "
+                            placeholder="Desde - Hasta"
+                            input-class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm"
+                          ></date-picker>
+                        </div>
+                      </div>
+                      <div class="col-span-6 sm:col-span-6">
+                        <label
+                          for="email_address"
+                          class="block text-sm font-medium text-gray-700"
+                          >Descripción</label
+                        >
+                        <div class="mt-1">
+                          <textarea
+                            id="about"
+                            name="about"
+                            v-model="newAbsence.description"
+                            rows="2"
+                            class="shadow-sm p-3 focus:ring-indigo-500 border border-gray-300 focus:border-indigo-400 focus:outline-none mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
+                            placeholder="you@example.com"
+                          ></textarea>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">
+                          Breve descripción. (Si Aplica)
+                        </p>
+                      </div>
+                      <div class="col-span-6 sm:col-span-6">
+                        <label
+                          for="email_address"
+                          class="block text-sm font-medium text-gray-700"
+                          >Imagen comprobante</label
+                        >
+                        <div class="mt-1">
+                          <file-pond
+                            name="test"
+                            ref="pond"
+                            class-name="my-pond"
+                            label-idle="Arrastra y suelta imagenes aquí..."
+                            allow-multiple="false"
+                            max-files="1"
+                            :server="server"
+                            instantUpload="false"
+                            accepted-file-types="image/jpeg, image/png, image/jpg"
+                            v-bind:files="myFiles"
+                            v-on:init="handleFilePondInit()"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <div class="container mx-auto">
+              <button
+                type="button"
+                v-on:click="closeFormModal()"
+                class="sm-mr-2 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:text-sm"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                id="show-date"
+                v-on:click="saveAbsence(newAbsence)"
+                class="justify-center rounded-md border border-transparent shadow-sm px-4 py-2  bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 sm:ml-3 sm:text-sm"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div
+      class="fixed z-10 inset-0 overflow-y-auto animated fadeIn faster hidden"
+      id="eliminar-ausencia"
+    >
+      <div
+        class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      >
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div
+            class="absolute inset-0 bg-gray-500 opacity-75 backdrop-close"
+            v-on:click="closeModals()"
+          ></div>
+        </div>
+
+        <!-- This element is to trick the browser into centering the modal contents. -->
+        <span
+          class="hidden sm:inline-block sm:align-middle sm:h-screen"
+          aria-hidden="true"
+          >&#8203;</span
+        >
+        <div
+          class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-top sm:max-w-lg sm:w-full"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-headline"
+        >
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div
+                class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+              >
+                <svg
+                  class="h-6 w-6 text-red-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3
+                  class="text-lg leading-6 font-medium text-gray-900"
+                  id="modal-headline"
+                >
+                  Eliminar registro
+                </h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">
+                    ¿Estas seguro de querer eliminar este registro?
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button
+              type="button"
+              v-on:click="deleteAbsence()"
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Eliminar
+            </button>
+            <button
+              type="button"
+              v-on:click="closeModals()"
+              class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </div>
     </div>

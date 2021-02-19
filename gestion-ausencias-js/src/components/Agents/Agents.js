@@ -5,18 +5,19 @@ import "jspdf-autotable";
 import moment from "moment";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
+import data from "../enviroments/development.config";
 
 // Create an instance of Notyf
 const notyf = new Notyf({
   duration: 4000,
   position: {
-    x: "center",
+    x: "right",
     y: "top",
   },
   types: [
     {
       type: "success",
-      background: "#18bc9c",
+      background: "#67c23a",
     },
   ],
 });
@@ -28,7 +29,7 @@ export default {
   data() {
     return {
       fecha: null,
-      url: process.env.API_URL,
+      API_URL: data.BASE_API_URL,
       searchValue: "",
       today: "",
       user: {
@@ -220,7 +221,7 @@ export default {
     toggleState(id, page) {
       this.$http
         .put(
-          "http://localhost:3000/api/agent/deactivate/" + id,
+          this.API_URL + "agent/deactivate/" + id,
           { foo: "bar" },
           {
             headers: {
@@ -365,7 +366,7 @@ export default {
       } else {
         $(".empty-inputs").addClass("hidden");
         this.$http
-          .post("http://localhost:3000/api/agent/save", user, {
+          .post(this.API_URL + "agent/save", user, {
             headers: {
               Authorization:
                 "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
@@ -403,7 +404,7 @@ export default {
       } else {
         $(".empty-inputs").addClass("hidden");
         this.$http
-          .put("http://localhost:3000/api/agent/update/" + user._id, user, {
+          .put(this.API_URL + "agent/update/" + user._id, user, {
             headers: {
               Authorization:
                 "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
@@ -430,8 +431,7 @@ export default {
     deleteAgent() {
       this.$http
         .put(
-          "http://localhost:3000/api/agent/delete/" +
-            localStorage.getItem("itl"),
+          this.API_URL + "agent/delete/" + localStorage.getItem("itl"),
           { foo: "bar" },
           {
             headers: {
@@ -465,7 +465,7 @@ export default {
     },
     loadAgents() {
       this.$http
-        .get("http://localhost:3000/api/agent/getAll", {
+        .get(this.API_URL + "agent/getAll", {
           headers: {
             Authorization:
               "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",

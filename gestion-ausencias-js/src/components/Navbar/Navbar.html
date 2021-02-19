@@ -67,9 +67,9 @@
                 >Inicio</router-link
               >
               <router-link
-                to="/agentes"
+                to="/personal"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >Agentes</router-link
+                >Personal</router-link
               >
             </div>
           </div>
@@ -81,17 +81,104 @@
           <div class="ml-3 relative">
             <div>
               <button
-                class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                v-if="token"
+                class="bg-gray-800 flex text-sm rounded-full focus:outline-none"
                 id="user-menu"
                 aria-haspopup="true"
               >
                 <span class="sr-only">Open user menu</span>
+
                 <img
+                  v-if="profilePhoto != ''"
                   class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  :src="profilePhoto"
                   alt=""
                 />
+                <div class="initials" v-if="profilePhoto==''">
+                  {{ initials }}
+                </div>
+                <span
+                  class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  v-on:click="showMenu"
+                  >{{ fullName }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    class="w-5 text-gray-300 inline-block mb-1 text-sm"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    /></svg
+                ></span>
               </button>
+              <button
+                v-if="!token"
+                class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                id="user-menu"
+                aria-haspopup="true"
+              >
+                <router-link
+                  to="/login"
+                  class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >Iniciar sesión</router-link
+                >
+              </button>
+              <div
+                class="origin-top-right hidden text-left absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
+                role="menu"
+                id="profile-menu"
+                style="z-index: 1000;"
+                aria-orientation="vertical"
+                aria-labelledby="user-menu"
+              >
+                <router-link
+                  to="/perfil/ajustes"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    class="w-5 inline-block text-gray-600"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  Ajustes</router-link
+                >
+                <router-link
+                  to="#"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    class="w-5 inline-block text-gray-600"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  Cerrar sesión</router-link
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -107,9 +194,9 @@
           >Inicio</router-link
         >
         <router-link
-          to="/agentes"
+          to="/personal"
           class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >Agentes</router-link
+          >Personal</router-link
         >
       </div>
     </div>

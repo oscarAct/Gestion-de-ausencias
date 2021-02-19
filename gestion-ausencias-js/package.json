@@ -11,8 +11,12 @@
     "autoprefixer": "^9.8.6",
     "core-js": "^3.6.5",
     "filepond": "^4.25.1",
+    "filepond-plugin-file-validate-size": "^2.2.2",
     "filepond-plugin-file-validate-type": "^1.2.5",
+    "filepond-plugin-image-crop": "^2.0.4",
+    "filepond-plugin-image-edit": "^1.6.2",
     "filepond-plugin-image-preview": "^4.6.5",
+    "filepond-plugin-image-transform": "^3.7.5",
     "firebase": "^8.2.7",
     "jquery": "^3.5.1",
     "jspdf": "^2.3.0",
@@ -33,6 +37,7 @@
     "xlsx": "^0.16.9"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.2.1",
     "@types/jquery": "^3.5.5",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",

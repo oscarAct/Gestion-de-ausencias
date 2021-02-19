@@ -8,6 +8,11 @@ const router = express.Router();
 
 router.post("/absence/save", midAuth.authenticated, absencesController.save);
 router.get("/absence/getAll", midAuth.authenticated, absencesController.getAll);
+router.get(
+  "/absence/getTodayAbsences",
+  midAuth.authenticated,
+  absencesController.getTodayAbsences
+);
 router.put(
   "/absence/delete/:id",
   midAuth.authenticated,

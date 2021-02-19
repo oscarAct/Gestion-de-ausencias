@@ -1,0 +1,137 @@
+<div class="container w-full p-12 mx-auto bg-gray-50">
+  <div
+    class="container mx-auto bg-white w-full shadow-lg"
+    style="border-radius: 10px;"
+  >
+    <div class="grid grid-cols-4 gap-4">
+      <div
+        class="col-start-1 col-end-2 border-r h-scrn"
+        style="border-top-left-radius: 10px;"
+      >
+        <div class="w-full text-left text-gray-600 p-3 pointer active mt-5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 inline-block text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span class="ml-4" style="font-weight: 600; letter-spacing: 0.6px;"
+            >Perfil</span
+          >
+        </div>
+        <div class="w-full text-left text-gray-600 p-3 pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 inline-block text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          <span class="ml-4" style="font-weight: 600; letter-spacing: 0.6px;"
+            >Administrar usuarios</span
+          >
+        </div>
+        <div class="w-full text-left text-gray-600 p-3 pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 inline-block text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span class="ml-4" style="font-weight: 600; letter-spacing: 0.6px;"
+            >Perfil</span
+          >
+        </div>
+      </div>
+      <!-- ... -->
+      <div class="text-left p-3 col-span-2 mx-auto">
+        <h3 class="font-bold mb-2">Perfil del usuario</h3>
+        <span class="text-gray-400"
+          >Información referente al perfil del usuario. Esta información no será
+          pública.</span
+        >
+        <br class="mb-5" />
+        <br />
+        <span class="font-bold text-gray-700 mt-5">Nombre completo</span>
+        <br />
+        <input
+          type="text"
+          class="border rounded-lg px-3 focus:outline-none focus:border-indigo-400 py-2 mt-1 mb-5 text-sm w-2/5 shadow-sm"
+          placeholder="Nombre"
+          v-model="gottenUser.name"
+        />
+        <input
+          type="text"
+          class="border rounded-lg px-3 focus:outline-none focus:border-indigo-400 py-2 mt-1 mb-5 text-sm w-2/5 shadow-sm ml-5"
+          placeholder="Apellidos"
+          v-model="gottenUser.surname"
+        />
+        <br />
+        <span class="font-bold text-gray-700 mt-5">Correo electronico</span>
+        <br />
+        <input
+          type="text"
+          class="border rounded-lg px-3 focus:outline-none focus:border-indigo-400 py-2 mt-1 mb-5 text-sm w-10/12 shadow-sm"
+          placeholder="Apellidos"
+          v-model="gottenUser.email"
+        />
+        <h3 for="" class="font-bold">Imagen de perfil</h3>
+        <div class="mt-5">
+          <img
+            :src="gottenUser.profilePhoto"
+            width="150px"
+            height="150px"
+            class="img-rounded shadow-lg"
+            alt=""
+          />
+          <br />
+          <file-pond
+            name="test"
+            ref="pond"
+            allowImageEdit="true"
+            allowImageTransform="true"
+            allowFileSizeValidation="true"
+            imageEditAllowEdit="false"
+            imageCropAspectRatio="1:1"
+            styleImageEditButtonEditItemPosition="bottom center"
+            maxFileSize="2MB"
+            labelMaxFileSizeExceeded="La imagen es demasiado grande."
+            labelMaxFileSize="Tamaño maximo: 2 MB"
+            class-name="my-pond"
+            :server="server"
+            label-idle="Arrastra y suelta imagenes aquí..."
+            allow-multiple="false"
+            max-files="1"
+            instantUpload="false"
+            accepted-file-types="image/jpeg, image/png, image/jpg"
+            v-bind:files="profilePic"
+            v-on:init="handleFilePondInit"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

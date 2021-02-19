@@ -6,14 +6,29 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/inicio",
     name: "Home",
     component: Home,
   },
   {
-    path: "/agentes",
-    name: "Agentes",
+    path: "/",
+    redirect: "/inicio",
+  },
+  {
+    path: "/login",
+    name: "Login",
+    meta: { hideNavigation: true },
+    component: () => import("../views/Login.vue"),
+  },
+  {
+    path: "/personal",
+    name: "Personal",
     component: () => import("../views/Agents.vue"),
+  },
+  {
+    path: "/perfil/ajustes",
+    name: "Ajustes",
+    component: () => import("../views/Settings.vue"),
   },
 ];
 

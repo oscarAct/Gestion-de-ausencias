@@ -1,10 +1,19 @@
 const Absence = require("../models/absencesModel");
+const moment = require("moment");
 
 const controller = {};
 
 controller.save = (req, res) => {
   try {
-    const { agent, reason, description, from, until, proof } = req.body;
+    const {
+      agent,
+      reason,
+      description,
+      from,
+      until,
+      proof,
+      proofName,
+    } = req.body;
 
     if (
       agent == "" ||
@@ -28,6 +37,7 @@ controller.save = (req, res) => {
       absence.from = from;
       absence.until = until;
       absence.proof = proof;
+      absence.proofName = proofName;
       absence.user = req.user.id;
 
       absence.save((err, doc) => {
@@ -113,7 +123,15 @@ controller.delete = (req, res) => {
 };
 controller.update = (req, res) => {
   try {
-    const { agent, reason, description, from, until, proof } = req.body;
+    const {
+      agent,
+      reason,
+      description,
+      from,
+      until,
+      proof,
+      proofName,
+    } = req.body;
     const { id } = req.params;
 
     if (
@@ -136,6 +154,8 @@ controller.update = (req, res) => {
         description,
         from,
         until,
+        proof,
+        proofName,
       };
       Absence.findByIdAndUpdate({ _id: id }, update, (error, response) => {
         if (error) {
@@ -160,5 +180,23 @@ controller.update = (req, res) => {
       error: error.message,
     });
   }
+};
+controller.getTodayAbsences = (req, res) => {
+  const today = moment().format("MM/DD/yyyy");
+  Absence.find(
+    { from: { $lte: today }, until: { $gte: today }, deleted: false },
+    (err, response) => {
+      if (err) {
+        return res.send({
+          status: false,
+          err: err.message,
+        });
+      } else {
+        return res.send({ status: true, response });
+      }
+    }
+  )
+    .populate("agent")
+    .populate("reason");
 };
 module.exports = controller;
