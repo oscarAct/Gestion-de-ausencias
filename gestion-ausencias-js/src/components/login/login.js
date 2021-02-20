@@ -41,16 +41,18 @@ export default {
       if (data.email.trim() == "" || data.password.trim() == "") {
         notyf.error("Ambos campos son obligatorios.");
       } else {
+        $(".linear-progress-material").fadeIn(300);
         try {
           this.$http.post(this.API_URL + "user/login", data).then((res) => {
-            console.log(res);
+            $(".linear-progress-material").fadeOut(300);
             if (res.body.status) {
               localStorage.setItem("token", res.body.token);
               localStorage.setItem("name", res.body.name);
               localStorage.setItem("initials", res.body.initials);
+              localStorage.setItem("profilePhoto", res.body.profilePhoto);
               this.$router.push({ path: "/" });
             } else {
-              notyf.error("Ha ocurrido un error al procesar la solicitud.");
+              notyf.error("Credenciales incorrectas.");
             }
           });
         } catch (error) {

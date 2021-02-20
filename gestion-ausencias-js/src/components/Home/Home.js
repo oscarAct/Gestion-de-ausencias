@@ -461,7 +461,6 @@ export default {
         })
         .then((res) => {
           if (res.body.status) {
-            console.log(res.body.response);
             this.todayAbsences = res.body.response;
           } else {
             console.error("No absences for today.");

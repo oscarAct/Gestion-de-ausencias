@@ -8,7 +8,7 @@ export default {
       token: localStorage.getItem("token"),
       initials: localStorage.getItem("initials"),
       fullName: localStorage.getItem("name"),
-      profilePhoto: localStorage.getItem("profilePhoto"),
+      profilePhoto: "",
     };
   },
   computed: {},
@@ -17,6 +17,14 @@ export default {
     showMenu() {
       $("#profile-menu").fadeToggle(100);
     },
+    logOut() {
+      localStorage.clear();
+      this.$router.push({ path: "/login" });
+    },
+  },
+  created() {
+    this.profilePhoto = localStorage.getItem("profilePhoto") || "";
+    console.log(localStorage.getItem("profilePhoto"));
   },
 };
 import $ from "jquery";

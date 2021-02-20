@@ -10,6 +10,7 @@ const UserSchema = Schema(
     password: { type: String },
     initials: { type: String },
     profilePhoto: { type: String },
+    isAdmin: { type: Boolean },
     deleted: { type: Boolean, default: false },
   },
   { versionKey: false, timestamps: true }

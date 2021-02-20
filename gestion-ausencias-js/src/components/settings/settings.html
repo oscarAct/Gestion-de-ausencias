@@ -1,4 +1,188 @@
 <div class="container w-full p-12 mx-auto bg-gray-50">
+  <!-- This example requires Tailwind CSS v2.0+ -->
+  <div class="fixed z-10 inset-0 overflow-y-auto hidden" id="modal-create-user">
+    <div
+      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
+      <!--
+      Background overlay, show/hide based on modal state.
+
+      Entering: "ease-out duration-300"
+        From: "opacity-0"
+        To: "opacity-100"
+      Leaving: "ease-in duration-200"
+        From: "opacity-100"
+        To: "opacity-0"
+    -->
+      <div
+        class="fixed inset-0 transition-opacity"
+        aria-hidden="true"
+        v-on:click="fadeOutModals"
+      >
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+
+      <!-- This element is to trick the browser into centering the modal contents. -->
+      <span
+        class="hidden sm:inline-block sm:align-middle sm:h-screen"
+        aria-hidden="true"
+        >&#8203;</span
+      >
+      <!--
+      Modal panel, show/hide based on modal state.
+
+      Entering: "ease-out duration-300"
+        From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        To: "opacity-100 translate-y-0 sm:scale-100"
+      Leaving: "ease-in duration-200"
+        From: "opacity-100 translate-y-0 sm:scale-100"
+        To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+    -->
+      <div
+        class="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 align-top md:w-11/12 lg:w-1/3 lx:w-1/3 w-full"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-headline"
+      >
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="">
+            <div class="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
+              <h3
+                class="text-lg text-center md:text-left lg:text-left xl:text-left leading-6 font-medium text-gray-900"
+                id="modal-headline"
+              >
+                Agregar usuario
+              </h3>
+              <div class="mt-2 grid grid-cols-6 gap-4">
+                <div
+                  class="md:col-span-3 lg:col-span-3 xl:col-span-3 col-span-6"
+                >
+                  <label
+                    for="first_name"
+                    class="block text-sm font-medium text-gray-700"
+                    >Nombre</label
+                  >
+                  <input
+                    type="text"
+                    name="first_name"
+                    v-model="newUser.name"
+                    id="first_name"
+                    placeholder="Nombre de usuario"
+                    autocomplete="given-name"
+                    class="shadow-sm p-2 mt-1 inline-flex focus:ring-indigo-500 border border-gray-300 ml-auto focus:border-indigo-400 focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+                <div
+                  class="md:col-span-3 lg:col-span-3 xl:col-span-3 col-span-6"
+                >
+                  <label
+                    for="first_name"
+                    class="block text-sm font-medium text-gray-700"
+                    >Apellidos</label
+                  >
+                  <input
+                    type="text"
+                    name="first_name"
+                    id="first_name"
+                    v-model="newUser.surname"
+                    placeholder="Apellidos"
+                    autocomplete="given-name"
+                    class="shadow-sm p-2 mt-1 mr-5 inline-flex focus:ring-indigo-500 border border-gray-300 ml-auto focus:border-indigo-400 focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+              </div>
+              <div class="grid grid-cols-6 gap-4 mt-5">
+                <div
+                  class="md:col-span-6 lg:col-span-6 xl:col-span-6 col-span-6"
+                >
+                  <label
+                    for="first_name"
+                    class="block text-sm font-medium text-gray-700"
+                    >Correo electrónico</label
+                  >
+                  <input
+                    type="text"
+                    name="first_name"
+                    id="first_name"
+                    v-model="newUser.email"
+                    placeholder="ejemplo@ejemplo.com"
+                    autocomplete="given-name"
+                    class="shadow-sm p-2 mt-1 mr-5 inline-flex focus:ring-indigo-500 border border-gray-300 ml-auto focus:border-indigo-400 focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+              </div>
+              <div class="mt-2 grid grid-cols-6 gap-4 mt-5">
+                <div
+                  class="md:col-span-3 lg:col-span-3 xl:col-span-3 col-span-6"
+                >
+                  <label
+                    for="first_name"
+                    class="block text-sm font-medium text-gray-700"
+                    >Contraseña</label
+                  >
+                  <input
+                    type="password"
+                    name="first_name"
+                    v-model="newUser.password"
+                    id="first_name"
+                    placeholder="Contraseña"
+                    autocomplete="given-name"
+                    class="shadow-sm p-2 mt-1 inline-flex focus:ring-indigo-500 border border-gray-300 ml-auto focus:border-indigo-400 focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+                <div
+                  class="md:col-span-3 lg:col-span-3 xl:col-span-3 col-span-6"
+                >
+                  <label
+                    for="first_name"
+                    class="block text-sm font-medium text-gray-700"
+                    >Repetir contraseña</label
+                  >
+                  <input
+                    type="password"
+                    name="first_name"
+                    v-on:blur="validatePassword(newUser.password, newUser.confirmPassword)"
+                    v-model="newUser.confirmPassword"
+                    id="first_name"
+                    placeholder="Repetir la contraseña"
+                    autocomplete="given-name"
+                    class="shadow-sm p-2 mt-1 mr-5 inline-flex focus:ring-indigo-500 border border-gray-300 ml-auto focus:border-indigo-400 focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+                <div
+                  class="md:col-span-6 lg:col-span-6 xl:col-span-6 col-span-6 hidden"
+                  id="password-failed"
+                >
+                  <div
+                    class="relative py-3 pl-4 pr-10 leading-normal text-red-700 bg-red-100 rounded-lg"
+                    role="alert"
+                  >
+                    <p>Las contraseñas no coinciden.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            v-on:click="addUser(newUser)"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            Agregar
+          </button>
+          <button
+            type="button"
+            v-on:click="fadeOutModals"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div
     class="container mx-auto bg-white w-full shadow-lg"
     style="border-radius: 10px;"
@@ -58,16 +242,16 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
             />
           </svg>
           <span class="ml-4" style="font-weight: 600; letter-spacing: 0.6px;"
-            >Perfil</span
+            >Seguridad</span
           >
         </div>
       </div>
-      <!-- ... -->
-      <div class="text-left p-3 col-span-2 mx-auto">
+      <!-- Perfil de usuario -->
+      <div class="text-left p-3 col-span-3 hidden">
         <h3 class="font-bold mb-2">Perfil del usuario</h3>
         <span class="text-gray-400"
           >Información referente al perfil del usuario. Esta información no será
@@ -94,16 +278,26 @@
         <br />
         <input
           type="text"
-          class="border rounded-lg px-3 focus:outline-none focus:border-indigo-400 py-2 mt-1 mb-5 text-sm w-10/12 shadow-sm"
-          placeholder="Apellidos"
+          class="border rounded-lg px-3 mr-3 focus:outline-none focus:border-indigo-400 py-2 mt-1 mb-5 text-sm w-10/12 shadow-sm"
+          placeholder="correo electrónico"
           v-model="gottenUser.email"
         />
-        <h3 for="" class="font-bold">Imagen de perfil</h3>
+        <br />
+        <button
+          type="button"
+          id="agregar-ausencia"
+          v-on:click="updateUser()"
+          class="inline-block ml-auto items-center mb-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+        >
+          Guardar
+        </button>
+        <hr />
+        <h3 for="" class="font-bold mt-4">Imagen de perfil</h3>
         <div class="mt-5">
           <img
             :src="gottenUser.profilePhoto"
-            width="150px"
-            height="150px"
+            width="100px"
+            height="100px"
             class="img-rounded shadow-lg"
             alt=""
           />
@@ -122,7 +316,7 @@
             labelMaxFileSize="Tamaño maximo: 2 MB"
             class-name="my-pond"
             :server="server"
-            label-idle="Arrastra y suelta imagenes aquí..."
+            label-idle="Arrastra y suelta la imagen aquí..."
             allow-multiple="false"
             max-files="1"
             instantUpload="false"
@@ -130,6 +324,138 @@
             v-bind:files="profilePic"
             v-on:init="handleFilePondInit"
           />
+        </div>
+      </div>
+      <!-- Seccion de usuarios -->
+      <div class="text-left p-3 col-span-3">
+        <h3 class="font-bold mb-2">Administrar los usuarios del sistema</h3>
+        <span class="text-gray-400"
+          >Añadir nuevos usuarios, modificar usuarios existentes...</span
+        >
+        <button
+          type="button"
+          id="agregar-ausencia"
+          v-on:click="showModal"
+          class="inline-flex items-center float-right px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="ml-1 mr-2 w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+          Agregar usuario
+        </button>
+        <br class="mb-5" />
+        <div class="flex flex-col mt-5">
+          <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div
+              class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
+            >
+              <div
+                class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+              >
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+                      >
+                        Nombre
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+                      >
+                        Apellidos
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+                      >
+                        Correo
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+                      >
+                        Rol
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+                      >
+                        Opciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-for="user in users">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                          <div class="flex-shrink-0 h-10 w-10">
+                            <img
+                              class="h-10 w-10 rounded-full"
+                              src="https://media.istockphoto.com/vectors/user-profile-icon-flat-red-round-button-vector-illustration-vector-id1162440985?k=6&m=1162440985&s=170667a&w=0&h=-Dp28TcalF7T4ejiF_b51RgKcGFWi2VqSHgWHLpkCHY="
+                              alt=""
+                            />
+                          </div>
+                          <div class="ml-4">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{user.name}}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{user.surname}}
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                          {{user.email}}
+                        </div>
+                      </td>
+                      <td
+                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                      >
+                        <span
+                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                        >
+                          Administrador
+                        </span>
+                        <span
+                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                        >
+                          Usuario
+                        </span>
+                      </td>
+                      <td
+                        class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                      >
+                        <span
+                          class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold pointer leading-none text-red-100 bg-red-600 rounded-full"
+                          >Eliminar</span
+                        >
+                      </td>
+                    </tr>
+
+                    <!-- More items... -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

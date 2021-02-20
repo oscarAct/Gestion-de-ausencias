@@ -67,7 +67,7 @@
                 >Inicio</router-link
               >
               <router-link
-                to="/personal"
+                to="/Personal/Empleados"
                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >Personal</router-link
               >
@@ -137,7 +137,7 @@
                 aria-labelledby="user-menu"
               >
                 <router-link
-                  to="/perfil/ajustes"
+                  to="/Perfil/Ajustes"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
                 >
@@ -157,10 +157,11 @@
                   </svg>
                   Ajustes</router-link
                 >
-                <router-link
-                  to="#"
+                <a
+                  href="#"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
+                  v-on:click="logOut"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +177,7 @@
                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                     />
                   </svg>
-                  Cerrar sesión</router-link
+                  Cerrar sesión</a
                 >
               </div>
             </div>
@@ -194,7 +195,7 @@
           >Inicio</router-link
         >
         <router-link
-          to="/personal"
+          to="/Personal/Empleados"
           class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
           >Personal</router-link
         >

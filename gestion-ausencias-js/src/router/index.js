@@ -6,27 +6,27 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/inicio",
+    path: "/Inicio",
     name: "Home",
     component: Home,
   },
   {
     path: "/",
-    redirect: "/inicio",
+    redirect: "/Inicio",
   },
   {
-    path: "/login",
+    path: "/Login",
     name: "Login",
     meta: { hideNavigation: true },
     component: () => import("../views/Login.vue"),
   },
   {
-    path: "/personal",
+    path: "/Personal/Empleados",
     name: "Personal",
     component: () => import("../views/Agents.vue"),
   },
   {
-    path: "/perfil/ajustes",
+    path: "/Perfil/Ajustes",
     name: "Ajustes",
     component: () => import("../views/Settings.vue"),
   },

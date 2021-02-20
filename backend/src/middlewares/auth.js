@@ -9,7 +9,7 @@ exports.authenticated = async function (req, res, next) {
   // check to the Authorization Header
   if (!req.headers.authorization) {
     return res.status(403).send({
-      message: "Access denied.",
+      message: "Access denied. Missing token",
     });
   }
 
