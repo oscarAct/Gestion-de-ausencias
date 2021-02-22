@@ -242,7 +242,8 @@ export default {
           } else {
             console.error("No users found.");
           }
-        });
+        })
+        .catch(() => {});
     },
     alternateStatus(e) {
       const element = e.explicitOriginalTarget;
@@ -351,7 +352,11 @@ export default {
   created() {
     this.loadUserData();
     this.getUsers();
-    firebase.initializeApp(data.FB_CONFIG);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(data.FB_CONFIG);
+    } else {
+      firebase.app(); // if already initialized, use that one
+    }
     firebase.analytics();
   },
 };

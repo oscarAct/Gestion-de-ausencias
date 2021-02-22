@@ -138,35 +138,32 @@ export default {
             formatter: "responsiveCollapse",
             width: 30,
             minWidth: 30,
-            align: "center",
+            hozAlign: "center",
             resizable: false,
             headerSort: false,
           },
           {
             title: "_id",
             field: "_id",
-            align: "left",
-            width: 200,
+            hozAlign: "left",
             sorter: "number",
-            responsive: 0,
+            responsive: 1,
             visible: false,
           },
           {
             title: "Nombre",
             field: "agent.name",
-            width: 200,
-            responsive: 0,
+            responsive: 1,
           },
           {
             title: "Apellidos",
             field: "agent.lastName",
-            width: 200,
-            responsive: 0,
+            responsive: 1,
           },
           {
             title: "Motivo",
             field: "reason.name",
-            align: "left",
+            hozAlign: "left",
             sorter: "number",
           },
           { title: "Descripcion", field: "description", responsive: 2 },
@@ -174,6 +171,7 @@ export default {
             title: "Comprobante",
             field: "proof",
             responsive: 2,
+            width: 100,
             formatter: this.formatPhoto,
             cellClick: function(e, cell) {
               const data = cell.getRow().getData();
@@ -189,14 +187,14 @@ export default {
             title: "Fecha inicio",
             formatter: this.formatDate,
             field: "from",
-            align: "left",
+            hozAlign: "left",
             sorter: "date",
           },
           {
             title: "Fecha fin",
             field: "until",
             formatter: this.formatDate,
-            align: "left",
+            hozAlign: "left",
           },
           {
             title: "",
@@ -224,12 +222,14 @@ export default {
       this.newAbsence.until = moment(this.fecha[1]).format("MM/DD/yyyy");
     },
     formatPhoto(cell) {
-      const value = cell._cell.value;
-      if (value == "") {
-        return "Sin comprobante";
-      } else {
-        return `<img src="${value}" width="30px" alt="imagen no carga" />`;
-      }
+      try {
+        const value = cell._cell.value;
+        if (value == "") {
+          return "Sin comprobante";
+        } else {
+          return `<img src="${value}" width="30px" alt="imagen no carga" />`;
+        }
+      } catch (error) {}
     },
     openEditIcon(value, data, cell, row, options) {
       let element = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5 text-blue-400 mx-auto hover:text-blue-500 ml-5 editRow" v-on:click="showMessage" viewBox="0 0 24 24" stroke="currentColor">
@@ -250,6 +250,12 @@ export default {
       ${element}
       </div>
       `;
+    },
+    addFile() {
+      $("#img-alert").fadeIn(300);
+    },
+    removeFile() {
+      $("#img-alert").fadeOut(300);
     },
     showDate(fecha) {
       let fechaNueva = new Date(fecha[0]);
@@ -292,10 +298,12 @@ export default {
         .format("LL");
     },
     formatDate(cell) {
-      const date = cell._cell.value;
-      return moment(date)
-        .locale("es-us")
-        .format("LL");
+      try {
+        const date = cell._cell.value;
+        return moment(date)
+          .locale("es-us")
+          .format("LL");
+      } catch (error) {}
     },
     changeQuantity() {
       this.options.paginationSize = $("#cantidad-registros").val();
@@ -336,7 +344,9 @@ export default {
         });
     },
     setId(e) {
-      this.newAbsence.agent = e.index;
+      try {
+        this.newAbsence.agent = e.index;
+      } catch (error) {}
     },
     hideImgViewer() {},
     showFormModal() {
@@ -477,7 +487,11 @@ export default {
     this.getDate();
     this.loadAgents();
     this.loadReasons();
-    firebase.initializeApp(data.FB_CONFIG);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(data.FB_CONFIG);
+    } else {
+      firebase.app(); // if already initialized, use that one
+    }
     firebase.analytics();
   },
 };

@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full pb-24">
   <div class="loader hidden"></div>
 
   <div class="img-viewer hidden" v-on:click="hideImgViewer()">
@@ -515,7 +515,7 @@
                             v-model="newAbsence.description"
                             rows="2"
                             class="shadow-sm p-3 focus:ring-indigo-500 border border-gray-300 focus:border-indigo-400 focus:outline-none mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
-                            placeholder="you@example.com"
+                            placeholder="Descripción referente a la ausencia."
                           ></textarea>
                         </div>
                         <p class="mt-2 text-sm text-gray-500">
@@ -528,10 +528,46 @@
                           class="block text-sm font-medium text-gray-700"
                           >Imagen comprobante</label
                         >
+                        <div
+                          :v-if="myFiles.length != 0"
+                          class="relative px-4 py-3 my-3 leading-normal text-yellow-700 bg-yellow-100 rounded-lg hidden"
+                          role="alert"
+                          id="img-alert"
+                        >
+                          <span
+                            class="absolute inset-y-0 left-0 flex items-center ml-4"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                              />
+                            </svg>
+                          </span>
+                          <p class="ml-6 text-sm">
+                            Por favor haz click en el boton
+                            <img
+                              class="inline-block"
+                              src="https://firebasestorage.googleapis.com/v0/b/gestor-de-archivos-34c41.appspot.com/o/absences%2Fabsences-photos%2Fupload.PNG?alt=media&token=4c0bb09c-c80b-41c1-8384-25d180aed67b"
+                              width="30px"
+                              alt=""
+                            />
+                            antes de confirmar los cambios.
+                          </p>
+                        </div>
                         <div class="mt-1">
                           <file-pond
                             name="test"
                             ref="pond"
+                            dropOnPage="true"
                             class-name="my-pond"
                             label-idle="Arrastra y suelta imagenes aquí..."
                             allow-multiple="false"
@@ -541,6 +577,8 @@
                             accepted-file-types="image/jpeg, image/png, image/jpg"
                             v-bind:files="myFiles"
                             v-on:init="handleFilePondInit()"
+                            @addfile="addFile()"
+                            @removefile="removeFile()"
                           />
                         </div>
                       </div>

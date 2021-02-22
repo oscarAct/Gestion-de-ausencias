@@ -9,6 +9,7 @@ const userRoutes = require("./src/routes/user");
 const absencesRoutes = require("./src/routes/absences");
 const agentsRoutes = require("./src/routes/agent");
 const reasonsRoutes = require("./src/routes/reason");
+const token = require("./src/routes/token");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -30,4 +31,5 @@ app.use("/api", userRoutes);
 app.use("/api", absencesRoutes);
 app.use("/api", agentsRoutes);
 app.use("/api", reasonsRoutes);
+app.use("/api", token);
 module.exports = app;

@@ -38,6 +38,7 @@ export default {
         lastName: "",
         userId: "",
       },
+      token: localStorage.getItem("token"),
       userTU: {
         _id: "",
         id_number: "",
@@ -67,14 +68,14 @@ export default {
             formatter: "responsiveCollapse",
             width: 30,
             minWidth: 30,
-            align: "left",
+            hozAlign: "left",
             resizable: false,
             headerSort: false,
           },
           {
             title: "User",
             field: "userId",
-            align: "left",
+            hozAlign: "left",
             width: 90,
             sorter: "number",
             responsive: 0,
@@ -82,7 +83,7 @@ export default {
           {
             title: "_id",
             field: "_id",
-            align: "left",
+            hozAlign: "left",
             width: 200,
             sorter: "number",
             responsive: 0,
@@ -91,27 +92,27 @@ export default {
           {
             title: "Cedula",
             field: "id_number",
-            align: "left",
+            hozAlign: "left",
             sorter: "number",
           },
           {
             title: "Nombre",
             field: "name",
             responsive: 2,
-            align: "left",
+            hozAlign: "left",
             sorter: "string",
           },
 
           {
             title: "Apellidos",
             field: "lastName",
-            align: "left",
+            hozAlign: "left",
             sorter: "string",
           },
           {
             title: "Estado",
             field: "active",
-            align: "left",
+            hozAlign: "left",
             responsive: 2,
             formatter: this.formatState,
             cellClick: (e, cell) => {
@@ -124,7 +125,7 @@ export default {
           {
             title: "Creado el",
             field: "createdAt",
-            align: "left",
+            hozAlign: "left",
             formatter: this.formatDate,
             sorter: "date",
           },
@@ -225,8 +226,7 @@ export default {
           { foo: "bar" },
           {
             headers: {
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+              Authorization: "Bearer " + this.token,
             },
           }
         )
@@ -252,12 +252,6 @@ export default {
       this.today = moment()
         .locale("es-us")
         .format("LL");
-
-      console.log(
-        moment("2021-02-10T22:48:18.242Z")
-          .locale("es-us")
-          .format("L")
-      );
     },
     showFormModal() {
       $("#form-ausencia").toggleClass("hidden");
@@ -290,10 +284,12 @@ export default {
       }, 500);
     },
     formatDate(cell) {
-      const date = cell._cell.value;
-      return moment(date)
-        .locale("es-us")
-        .format("LL");
+      try {
+        const date = cell._cell.value;
+        return moment(date)
+          .locale("es-us")
+          .format("LL");
+      } catch (error) {}
     },
     formatState(cell) {
       let template;
@@ -368,8 +364,7 @@ export default {
         this.$http
           .post(this.API_URL + "agent/save", user, {
             headers: {
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+              Authorization: "Bearer " + this.token,
             },
           })
           .then((res) => {
@@ -406,8 +401,7 @@ export default {
         this.$http
           .put(this.API_URL + "agent/update/" + user._id, user, {
             headers: {
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+              Authorization: "Bearer " + this.token,
             },
           })
           .then((res) => {
@@ -435,8 +429,7 @@ export default {
           { foo: "bar" },
           {
             headers: {
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+              Authorization: "Bearer " + this.token,
             },
           }
         )
@@ -467,8 +460,7 @@ export default {
       this.$http
         .get(this.API_URL + "agent/getAll", {
           headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsInVzZXIiOnsiZGVsZXRlZCI6ZmFsc2UsIl9pZCI6IjYwMjQ0YTkwMDVkMWQwMmQxMDZiOTUzZSIsIm5hbWUiOiJPc2NhciIsInN1cm5hbWUiOiJNb3JhbGVzIiwiZW1haWwiOiJvc2NhcjIyOTYxNUBob3RtYWlsLmNvbSIsImluaXRpYWxzIjoiT00iLCJwcm9maWxlUGhvdG8iOiIiLCJjcmVhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEwVDIxOjA1OjIwLjYzOVoifSwiaWF0IjoxNjEyOTk2MzMxfQ.coQBlWJvsGZYqk8vnjWIgNs7yMphHvg-NlwF5Cj-nwA",
+            Authorization: "Bearer " + this.token,
           },
         })
         .then((res) => (this.agents = res.body.response));

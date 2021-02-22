@@ -19,7 +19,7 @@ export default {
     },
     logOut() {
       localStorage.clear();
-      this.$router.push({ path: "/login" });
+      this.$router.push({ path: "/Login" });
     },
     goToSettings() {
       $("#profile-menu").fadeOut(100);
@@ -28,7 +28,6 @@ export default {
   },
   created() {
     this.profilePhoto = localStorage.getItem("profilePhoto") || "";
-    console.log(localStorage.getItem("profilePhoto"));
   },
 };
 import $ from "jquery";

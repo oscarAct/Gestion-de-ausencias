@@ -50,7 +50,9 @@ export default {
             if (res.body.status) {
               notyf.success("Se envió la nueva contraseña al correo.");
             } else if (res.body.notFound) {
-              notyf.error("Usuario no registrado en sistema");
+              notyf.error(
+                "Este usuario no es usuario activo de la plataforma."
+              );
             } else {
               notyf.error("Ha ocurrido un error inesperado.");
             }

@@ -50,7 +50,9 @@ export default {
               localStorage.setItem("name", res.body.name);
               localStorage.setItem("initials", res.body.initials);
               localStorage.setItem("profilePhoto", res.body.profilePhoto);
-              this.$router.push({ path: "/" });
+              this.$router.push({ path: "/Inicio" }).catch((error) => {
+                console.log(error.message);
+              });
             } else {
               notyf.error("Credenciales incorrectas.");
             }
@@ -65,5 +67,6 @@ export default {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
     localStorage.removeItem("initials");
+    localStorage.removeItem("profilePhoto");
   },
 };

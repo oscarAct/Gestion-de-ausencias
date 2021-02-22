@@ -2,14 +2,17 @@
   <div id="app">
     <Navbar v-if="!$route.meta.hideNavigation" />
     <router-view />
+    <Footer v-if="!$route.meta.hideNavigation" />
   </div>
 </template>
 <script>
 import Navbar from "./components/Navbar/index";
+import Footer from "./components/Footer/index";
 export default {
   name: "Home",
   components: {
     Navbar,
+    Footer,
   },
   data() {
     return {
@@ -43,5 +46,8 @@ export default {
 .page {
   position: fixed;
   width: inherit;
+}
+.h-scrn {
+  height: calc(100vh - 15.2vh);
 }
 </style>

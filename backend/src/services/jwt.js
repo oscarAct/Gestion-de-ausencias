@@ -1,5 +1,6 @@
 const jwt = require("jwt-simple");
 const moment = require("moment");
+require("dotenv").config();
 
 exports.createToken = function (user) {
   const payload = {
@@ -9,8 +10,5 @@ exports.createToken = function (user) {
     exp: moment().add(30, "days").unix,
   };
 
-  return jwt.encode(
-    payload,
-    "wwpc2mt8*++v-+6+@*@qwM6tyVxX&jDymQw5%Cmw5A#eV3H$@=?GkWhedpt-"
-  );
+  return jwt.encode(payload, process.env.SECRET_PASS);
 };

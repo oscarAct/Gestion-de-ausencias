@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import data from "../components/enviroments/development.config";
+import axios from "axios";
 
 Vue.use(VueRouter);
 
@@ -8,6 +10,28 @@ const routes = [
   {
     path: "/Inicio",
     name: "Home",
+    beforeEnter: (to, from, next) => {
+      if (!localStorage.getItem("token")) {
+        next("/Login");
+      } else {
+        axios
+          .get(data.BASE_API_URL + "token/isValid", {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          })
+          .then((res) => {
+            if (res.data.isValid) {
+              next();
+            } else {
+              next("/Login");
+            }
+          })
+          .catch((err) => {
+            next("/Login");
+          });
+      }
+    },
     component: Home,
   },
   {
@@ -21,13 +45,49 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
-    path: "/Personal/Empleados",
+    path: "/Personal/Colaboradores",
     name: "Personal",
+    beforeEnter: (to, from, next) => {
+      axios
+        .get(data.BASE_API_URL + "token/isValid", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          if (res.data.isValid) {
+            next();
+          } else {
+            next("/Login");
+          }
+        })
+        .catch((err) => {
+          next("/Login");
+        });
+    },
     component: () => import("../views/Agents.vue"),
   },
   {
     path: "/Perfil/Ajustes",
     name: "Ajustes",
+    beforeEnter: (to, from, next) => {
+      axios
+        .get(data.BASE_API_URL + "token/isValid", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          if (res.data.isValid) {
+            next();
+          } else {
+            next("/Login");
+          }
+        })
+        .catch((err) => {
+          next("/Login");
+        });
+    },
     component: () => import("../views/Settings.vue"),
   },
   {

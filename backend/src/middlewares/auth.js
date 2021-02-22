@@ -1,14 +1,15 @@
 const jwt = require("jwt-simple");
 const moment = require("moment");
 const User = require("../models/userModel");
+require("dotenv").config();
 
-const secretPassword =
-  "wwpc2mt8*++v-+6+@*@qwM6tyVxX&jDymQw5%Cmw5A#eV3H$@=?GkWhedpt-";
+const secretPassword = process.env.SECRET_PASS;
 
 exports.authenticated = async function (req, res, next) {
   // check to the Authorization Header
   if (!req.headers.authorization) {
     return res.status(403).send({
+      isValid: false,
       message: "Access denied. Missing token",
     });
   }
@@ -20,6 +21,7 @@ exports.authenticated = async function (req, res, next) {
   // decrypt token
   if (aux[0] != "Bearer") {
     return res.status(403).send({
+      isValid: false,
       message: "Access denied.",
     });
   }
@@ -35,12 +37,14 @@ exports.authenticated = async function (req, res, next) {
       }
     });
     if (payload.exp <= moment().unix()) {
-      return res.status(404).send({
+      return res.status(403).send({
+        isValid: false,
         message: "Token has expired",
       });
     }
   } catch (ex) {
-    return res.status(404).send({
+    return res.status(403).send({
+      isValid: false,
       message: "Token invalid",
     });
   }
