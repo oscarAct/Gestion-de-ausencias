@@ -16,5 +16,21 @@ router.post(
   userController.setProfilePhoto
 );
 router.put("/user/update", midAuth.authenticated, userController.update);
+router.put(
+  "/user/disableEnable/:id",
+  midAuth.authenticated,
+  userController.disableUser
+);
+router.put(
+  "/user/setAdmin/:id",
+  midAuth.authenticated,
+  userController.setAdmin
+);
+router.put(
+  "/user/changePassword",
+  midAuth.authenticated,
+  userController.changePassword
+);
+router.put("/user/recoverPassword", userController.recoverPassword);
 
 module.exports = router;

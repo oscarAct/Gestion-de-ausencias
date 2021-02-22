@@ -52,10 +52,6 @@ export default {
     return {
       profilePic: [],
       users: [],
-      changePassword: {
-        oldPassword: "",
-        newPassword: "",
-      },
       newUser: {
         name: "",
         surname: "",
@@ -63,7 +59,7 @@ export default {
         password: "",
         confirmPassword: "",
         profilePhoto:
-          "https://firebasestorage.googleapis.com/v0/b/gestor-de-archivos-34c41.appspot.com/o/absences%2Fusers%2Fprofile-photos%2F82827-unnamed.png?alt=media&token=28bc3150-02c6-4f6f-be77-4c786845ee30",
+          "https://firebasestorage.googleapis.com/v0/b/gestor-de-archivos-34c41.appspot.com/o/absences%2Fusers%2Fprofile-photos%2F20955-usuario.jpg?alt=media&token=ecb54467-bde5-4dc1-8af1-9587c65cfb5d",
       },
       API_URL: data.BASE_API_URL,
       imgURL: "",
@@ -196,7 +192,6 @@ export default {
             })
             .then((res) => {
               if (res.body.status) {
-                this.getUsers();
                 this.newUser.name = "";
                 this.newUser.surname = "";
                 this.newUser.email = "";
@@ -243,109 +238,6 @@ export default {
             console.error("No users found.");
           }
         });
-    },
-    alternateStatus(e) {
-      const element = e.explicitOriginalTarget;
-      const id = $(element).attr("_id");
-
-      this.$http
-        .put(
-          this.API_URL + "user/disableEnable/" + id,
-          { foo: "Bar" },
-          {
-            headers: {
-              Authorization: "Bearer " + this.token,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.body.status) {
-            this.getUsers();
-          } else {
-            notyf.error("No se pudo actualizar el usuario");
-          }
-        });
-    },
-    alternateRole(e) {
-      const element = e.explicitOriginalTarget;
-      const id = $(element).attr("_id");
-
-      this.$http
-        .put(
-          this.API_URL + "user/setAdmin/" + id,
-          { foo: "Bar" },
-          {
-            headers: {
-              Authorization: "Bearer " + this.token,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.body.status) {
-            this.getUsers();
-          } else {
-            notyf.error("No se pudo actualizar el usuario");
-          }
-        });
-    },
-    changePass(data) {
-      if (data.oldPassword == "" || data.newPassword == "") {
-        notyf.error("Ambos campos son obligatorios.");
-      } else if (data.oldPassword === data.newPassword) {
-        notyf.error("Las contraseñas no pueden ser iguales.");
-      } else {
-        this.$http
-          .put(this.API_URL + "user/changePassword", data, {
-            headers: {
-              Authorization: "Bearer " + this.token,
-            },
-          })
-          .then((res) => {
-            if (res.body.status) {
-              notyf.success("Contraseña actualizada.");
-              this.changePassword.oldPassword = "";
-              this.changePassword.newPassword = "";
-            } else if (res.body.doesntMatch) {
-              notyf.error(
-                "Ocurrió un error. Tu contraseña actual no coincide."
-              );
-            } else {
-              notyf.error("No se pudo actualizar la contraseña.");
-            }
-          });
-      }
-    },
-    showProfile() {
-      $("#users").fadeOut(100);
-      $("#users-link").removeClass("active");
-      $("#security").fadeOut(100);
-      $("#security-link").removeClass("active");
-      $("#profile-link").addClass("active");
-      setTimeout(() => {
-        $("#profile").fadeIn(200);
-      }, 150);
-    },
-    showUsers() {
-      $("#profile").fadeOut(100);
-      $("#profile-link").removeClass("active");
-      $("#security").fadeOut(100);
-      $("#security-link").removeClass("active");
-      setTimeout(() => {
-        $("#users").fadeIn(200);
-      }, 150);
-
-      $("#users-link").addClass("active");
-    },
-    showSecurity() {
-      $("#profile").fadeOut(100);
-      $("#profile-link").removeClass("active");
-      $("#users").fadeOut(100);
-      $("#users-link").removeClass("active");
-      setTimeout(() => {
-        $("#security").fadeIn(200);
-      }, 150);
-
-      $("#security-link").addClass("active");
     },
   },
   created() {

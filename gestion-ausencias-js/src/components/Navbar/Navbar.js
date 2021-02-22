@@ -21,6 +21,10 @@ export default {
       localStorage.clear();
       this.$router.push({ path: "/login" });
     },
+    goToSettings() {
+      $("#profile-menu").fadeOut(100);
+      this.$router.push({ path: "/Perfil/Ajustes" });
+    },
   },
   created() {
     this.profilePhoto = localStorage.getItem("profilePhoto") || "";

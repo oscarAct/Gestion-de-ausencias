@@ -30,6 +30,12 @@ const routes = [
     name: "Ajustes",
     component: () => import("../views/Settings.vue"),
   },
+  {
+    path: "/Cuenta/Recuperar",
+    name: "RecuperarContrasena",
+    meta: { hideNavigation: true },
+    component: () => import("../views/forgotPassword.vue"),
+  },
 ];
 
 const router = new VueRouter({
