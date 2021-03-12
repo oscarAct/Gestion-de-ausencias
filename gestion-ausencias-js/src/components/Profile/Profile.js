@@ -241,6 +241,7 @@ export default {
     },
   },
   created() {
+    document.title = "Gestion de ausencias - Ajustes"
     this.loadUserData();
     this.getUsers();
     firebase.initializeApp(data.FB_CONFIG);

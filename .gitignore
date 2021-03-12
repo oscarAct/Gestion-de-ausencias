@@ -2,10 +2,13 @@
 gestion-ausencias-js/node_modules
 gestion-ausencias-js/dist
 backend/node_modules
+node_modules
 
 # local env files
 gestion-ausencias-js/.env.local
 gestion-ausencias-js/.env.*.local
+backend/.env.local
+backendausencias-js/.env
 
 # Log files
 gestion-ausencias-js/npm-debug.log*

@@ -64,6 +64,7 @@ export default {
     },
   },
   created() {
+    document.title = "Gestion de ausencias - Iniciar sesión"
     localStorage.removeItem("token");
     localStorage.removeItem("name");
     localStorage.removeItem("initials");

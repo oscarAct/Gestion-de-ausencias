@@ -8,6 +8,7 @@ const AgentSchema = Schema(
     id_number: { type: String },
     name: { type: String },
     lastName: { type: String },
+    area: { type: Schema.ObjectId, ref: "Area", required: true },
     active: { type: Boolean, required: true, default: true },
     deleted: { type: Boolean, default: false },
   },

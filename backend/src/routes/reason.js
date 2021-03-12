@@ -13,5 +13,10 @@ router.put(
   midAuth.authenticated,
   reasonController.delete
 );
+router.put(
+  "/reason/update/:id",
+  midAuth.authenticated,
+  reasonController.update
+);
 
 module.exports = router;

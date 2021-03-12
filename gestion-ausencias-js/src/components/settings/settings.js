@@ -7,6 +7,7 @@ import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import FilePondPluginImageEdit from "filepond-plugin-image-edit";
 import FilePondPluginImageTransform from "filepond-plugin-image-transform";
 import { Notyf } from "notyf";
+import axios from "axios";
 
 import data from "../enviroments/development.config";
 import firebase from "firebase";
@@ -52,10 +53,14 @@ export default {
     return {
       profilePic: [],
       users: [],
+      newReason: "",
+      newArea: "",
       changePassword: {
         oldPassword: "",
         newPassword: "",
       },
+      reasons: { },
+      areas: { },
       newUser: {
         name: "",
         surname: "",
@@ -316,11 +321,145 @@ export default {
           });
       }
     },
+    loadReasons(){
+      axios.get(data.BASE_API_URL + "reason/getAll", {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }).then((res) => {
+        if(res.data.status){
+          this.reasons = res.data.response;
+        }else{
+          console.log("error");
+        }
+      }
+      )
+    },
+    loadAreas(){
+      axios.get(data.BASE_API_URL + "area/areas", {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }).then((res) => {
+        if(res.data.status){
+          this.areas = res.data.areas;
+        }else{
+          console.log("error");
+        }
+      }
+      )
+    },
+    updateReason(id, e){
+      const name = $("#"+id).val();
+      const update = {
+        name
+      }
+      if (e.keyCode === 13) {
+        axios.put(data.BASE_API_URL + "reason/update/"+id, update, {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        }).then((res) => {
+          if(res.data.status){
+            notyf.success("Valor actualizado")
+            $("#"+id).blur();
+          }else{
+            notyf.error("Ocurrió un error.")
+          }
+        }).catch();
+      }
+    },
+    updateArea(id, e){
+      const name = $("#"+id).val();
+      const update = {
+        name
+      }
+      if (e.keyCode === 13) {
+        axios.put(data.BASE_API_URL + "area/update/"+id, update, {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        }).then((res) => {
+          if(res.data.status){
+            notyf.success("Valor actualizado")
+            $("#"+id).blur();
+          }else{
+            notyf.error("Ocurrió un error.")
+          }
+        }).catch();
+      }
+    },
+    deleteReason(id){
+        axios.put(data.BASE_API_URL + "reason/delete/"+id, {foo: "bar"}, {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        }).then((res) => {
+          if(res.data.status){
+            notyf.success("Registro eliminado.")
+            this.loadReasons();
+          }else{
+            notyf.error("Ocurrió un error.")
+          }
+        }).catch();
+    },
+    deleteArea(id){
+        axios.delete(data.BASE_API_URL + "area/delete/"+id, {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        }).then((res) => {
+          if(res.data.status){
+            notyf.success("Registro eliminado.")
+            this.loadAreas();
+          }else{
+            notyf.error("Ocurrió un error.")
+          }
+        }).catch();
+    },
+    saveReason(name){
+      const save = {
+        name
+      }
+       axios.post(data.BASE_API_URL + "reason/save", save, {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        }).then((res) => {
+          if(res.data.status){
+            notyf.success("Guardado correctamente")
+            this.loadReasons();
+            this.newReason = "";
+          }else{
+            notyf.error("Ocurrió un error.")
+          }
+        }).catch();
+    },
+    saveArea(name){
+      const save = {
+        name
+      }
+       axios.post(data.BASE_API_URL + "area/save", save, {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        }).then((res) => {
+          if(res.data.status){
+            notyf.success("Guardado correctamente")
+            this.loadAreas();
+            this.newArea = "";
+          }else{
+            notyf.error("Ocurrió un error.")
+          }
+        }).catch();
+    },
     showProfile() {
       $("#users").fadeOut(100);
       $("#users-link").removeClass("active");
       $("#security").fadeOut(100);
       $("#security-link").removeClass("active");
+      $("#reasons").fadeOut(100);
+      $("#reasons-link").removeClass("active");
       $("#profile-link").addClass("active");
       setTimeout(() => {
         $("#profile").fadeIn(200);
@@ -331,6 +470,8 @@ export default {
       $("#profile-link").removeClass("active");
       $("#security").fadeOut(100);
       $("#security-link").removeClass("active");
+      $("#reasons").fadeOut(100);
+      $("#reasons-link").removeClass("active");
       setTimeout(() => {
         $("#users").fadeIn(200);
       }, 150);
@@ -342,15 +483,33 @@ export default {
       $("#profile-link").removeClass("active");
       $("#users").fadeOut(100);
       $("#users-link").removeClass("active");
+      $("#reasons").fadeOut(100);
+      $("#reasons-link").removeClass("active");
       setTimeout(() => {
         $("#security").fadeIn(200);
       }, 150);
 
       $("#security-link").addClass("active");
     },
+    showReasons() {
+      $("#profile").fadeOut(100);
+      $("#profile-link").removeClass("active");
+      $("#users").fadeOut(100);
+      $("#users-link").removeClass("active");
+      $("#security").fadeOut(100);
+      $("#security-link").removeClass("active");
+      setTimeout(() => {
+        $("#reasons").fadeIn(200);
+      }, 150);
+
+      $("#reasons-link").addClass("active");
+    },
   },
   created() {
+    document.title = "Gestion de ausencias - Ajustes"
     this.loadUserData();
+    this.loadReasons();
+    this.loadAreas();
     this.getUsers();
     if (!firebase.apps.length) {
       firebase.initializeApp(data.FB_CONFIG);

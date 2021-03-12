@@ -4,7 +4,7 @@ const controller = {};
 
 controller.saveAgent = (req, res) => {
   try {
-    const { userId, id_number, name, lastName } = req.body;
+    const { userId, id_number, name, lastName, area } = req.body;
 
     if (
       userId == "" ||
@@ -14,7 +14,9 @@ controller.saveAgent = (req, res) => {
       name == "" ||
       name == undefined ||
       lastName == "" ||
-      lastName == undefined
+      lastName == undefined ||
+      area == "" ||
+      area == undefined
     ) {
       return res
         .status(200)
@@ -26,6 +28,7 @@ controller.saveAgent = (req, res) => {
       agent.id_number = id_number;
       agent.name = name;
       agent.lastName = lastName;
+      agent.area = area;
 
       agent.save((err, doc) => {
         if (err) {
@@ -66,7 +69,7 @@ controller.getAll = (req, res) => {
           response,
         });
       }
-    });
+    }).populate("area");
   } catch (error) {
     return res.status(500).send({
       status: false,

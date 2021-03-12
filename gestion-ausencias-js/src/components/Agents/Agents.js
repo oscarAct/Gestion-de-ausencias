@@ -6,6 +6,7 @@ import moment from "moment";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import data from "../enviroments/development.config";
+import axios from "axios"
 
 // Create an instance of Notyf
 const notyf = new Notyf({
@@ -31,12 +32,14 @@ export default {
       fecha: null,
       API_URL: data.BASE_API_URL,
       searchValue: "",
+      areas: {},
       today: "",
       user: {
         id_number: "",
         name: "",
         lastName: "",
         userId: "",
+        area: "",
       },
       token: localStorage.getItem("token"),
       userTU: {
@@ -110,6 +113,13 @@ export default {
             sorter: "string",
           },
           {
+            title: "Area de trabajo",
+            field: "area.name",
+            hozAlign: "left",
+            sorter: "string",
+            formatter: this.formatArea
+          },
+          {
             title: "Estado",
             field: "active",
             hozAlign: "left",
@@ -149,7 +159,7 @@ export default {
             sortable: false,
             download: false,
             formatter: this.openDeleteIcon,
-            cellClick: function(e, cell) {
+            cellClick: function (e, cell) {
               const data = cell.getRow().getData()._id;
               localStorage.setItem("itl", data);
               $("#eliminar-agente").toggleClass("hidden");
@@ -161,16 +171,31 @@ export default {
     };
   },
   computed: {},
-  mounted() {},
+  mounted() { },
   methods: {
+    loadAreas() {
+      axios.get(data.BASE_API_URL + "area/areas", {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }).then((res)=> {
+        if(!res.data.status){
+          notyf.error("Error cargando las areas de trabajo. Reintente")
+        }else{
+          this.areas = res.data.areas;
+        }
+      }).catch((err)=> {
+        console.log(err);
+      })
+    },
     showDownloadMenu() {
       $("#download-menu").fadeToggle(0);
       $("#backdrop-bg").fadeToggle(0);
     },
     openEditIcon(value, data, cell, row, options) {
       let element = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5 text-blue-400 mx-auto hover:text-blue-500 ml-5 editRow" v-on:click="showMessage" viewBox="0 0 24 24" stroke="currentColor">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-</svg>`;
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+      </svg>`;
       return `
       <div class="col-span-1">
       ${element}
@@ -179,8 +204,8 @@ export default {
     },
     openDeleteIcon(value, data, cell, row, options) {
       let element = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" class="w-5 h-5 text-red-400 hover:text-red-500 mx-auto" viewBox="0 0 24 24" stroke="currentColor">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-</svg>`;
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+      </svg>`;
       return `
       <div class="col-span-1">
       ${element}
@@ -295,7 +320,20 @@ export default {
         return moment(date)
           .locale("es-us")
           .format("LL");
-      } catch (error) {}
+      } catch (error) { }
+    },
+    formatArea(cell) {
+      try {
+        let val = "";
+        if (cell._cell.value == undefined) {
+          
+        } else {
+          val = `<span class="font-bold">${cell._cell.value}</span>`
+        }
+        
+        
+        return val;
+      } catch (error) { }
     },
     formatState(cell) {
       let template;
@@ -327,6 +365,7 @@ export default {
         this.$http
           .get("https://apis.gometa.org/cedulas/" + id_number)
           .then((res) => {
+            if (res.body.results.length != 0){
             $(".linear-progress-material").toggleClass("hidden");
             let firstname = res.body.results[0].firstname.toString();
             let lastname = res.body.results[0].lastname.toString();
@@ -351,6 +390,10 @@ export default {
                 this.user.lastName = finalLast.trim();
               }
             }
+            }else{
+              $(".linear-progress-material").toggleClass("hidden");
+            }
+            
           });
       } else {
       }
@@ -457,7 +500,7 @@ export default {
     },
     camelize(str) {
       return str
-        .replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+        .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
           return index === 0 ? word.toUpperCase() : word.toLowerCase();
         })
         .replace(/\s+/g, "");
@@ -473,7 +516,9 @@ export default {
     },
   },
   created() {
+    document.title = "Gestion de ausencias - Personal"
     this.loadAgents();
     this.getDate();
+    this.loadAreas();
   },
 };

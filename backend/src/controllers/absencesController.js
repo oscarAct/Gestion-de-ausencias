@@ -82,7 +82,7 @@ controller.getAll = (req, res) => {
     })
       .populate("reason")
       .populate("user")
-      .populate("agent");
+      .populate({path: "agent", populate: {path: "area"}});
   } catch (error) {
     return res.status(500).send({
       status: false,
@@ -182,7 +182,8 @@ controller.update = (req, res) => {
   }
 };
 controller.getTodayAbsences = (req, res) => {
-  const today = moment().format("MM/DD/yyyy");
+ try {
+   const today = moment().format("MM/DD/yyyy");
   Absence.find(
     { from: { $lte: today }, until: { $gte: today }, deleted: false },
     (err, response) => {
@@ -196,7 +197,15 @@ controller.getTodayAbsences = (req, res) => {
       }
     }
   )
-    .populate("agent")
+    .populate({path: "agent", populate: { path: "area"}})
     .populate("reason");
+ } catch (error) {
+  return res.status(500).send({
+    status: false,
+    message: "Internal server error",
+    error: error.message,
+  });
+ }
+  
 };
 module.exports = controller;

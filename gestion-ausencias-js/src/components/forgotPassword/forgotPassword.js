@@ -32,6 +32,9 @@ export default {
   },
   computed: {},
   mounted() {},
+  created() {
+    document.title = "Gestion de ausencias - Recuperar contraseña"
+  },
   methods: {
     recoverPassword(email) {
       if (email == "") {

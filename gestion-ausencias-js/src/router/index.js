@@ -32,6 +32,7 @@ const routes = [
           });
       }
     },
+    meta: { title: "Gestion ausencias - Inicio" },
     component: Home,
   },
   {
@@ -41,7 +42,7 @@ const routes = [
   {
     path: "/Login",
     name: "Login",
-    meta: { hideNavigation: true },
+    meta: { hideNavigation: true, title: "Gestion ausencias - Iniciar sesion" },
     component: () => import("../views/Login.vue"),
   },
   {

@@ -166,6 +166,12 @@ export default {
             hozAlign: "left",
             sorter: "number",
           },
+          {
+            title: "Area de trabajo",
+            field: "agent.area.name",
+            hozAlign: "left",
+            sorter: "number",
+          },
           { title: "Descripcion", field: "description", responsive: 2 },
           {
             title: "Comprobante",
@@ -482,6 +488,7 @@ export default {
     },
   },
   created() {
+    document.title = "Gestion de ausencias - Inicio"
     this.loadTodayAbsences();
     this.loadAbsences();
     this.getDate();
