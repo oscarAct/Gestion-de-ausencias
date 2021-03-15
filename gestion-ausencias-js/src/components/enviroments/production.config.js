@@ -1,5 +1,5 @@
 const data = {
-  BASE_API_URL: "",
+  BASE_API_URL: "https://correos-rrhvl.ondigitalocean.app/api/",
   FB_CONFIG: {
     apiKey: "AIzaSyAhltvhQkduoenbTMoEwLRaQwQGPee_aJk",
     authDomain: "gestor-de-archivos-34c41.firebaseapp.com",
