@@ -306,9 +306,13 @@ export default {
     formatDate(cell) {
       try {
         const date = cell._cell.value;
-        return moment(date)
-          .locale("es-us")
-          .format("LL");
+        return (
+          moment(date)
+            .locale("es-mx")
+            //In production the date shows one day less. This line avoid that to happens
+            .add(1, "days")
+            .format("LL")
+        );
       } catch (error) {}
     },
     changeQuantity() {
@@ -484,11 +488,17 @@ export default {
         });
     },
     dateFormatter(value) {
-      return moment(value).format("DD/MM/yyyy");
+      moment.locale("es-mx");
+      return (
+        moment(value)
+          //In production the date shows one day less. This line avoid that to happens
+          .add(1, "days")
+          .format("L")
+      );
     },
   },
   created() {
-    document.title = "Gestion de ausencias - Inicio"
+    document.title = "Gestion de ausencias - Inicio";
     this.loadTodayAbsences();
     this.loadAbsences();
     this.getDate();
