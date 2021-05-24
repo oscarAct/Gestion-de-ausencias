@@ -1,6 +1,7 @@
 //Libreries
 
 import $ from "jquery";
+import { html2canvas } from "html2canvas";
 import DatePicker from "vue2-datepicker";
 import TabulatorComponent from "vue-tabulator";
 import "jspdf-autotable";
@@ -64,10 +65,30 @@ export default {
   data() {
     return {
       myFiles: [],
+      absecensByReason: [],
+      weeklyAbsences: [],
+      chart1Data: [],
+      chartOptions: {
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              formatter: function() {
+                if (this.y > 0) {
+                  return this.y;
+                }
+              },
+            },
+          },
+        },
+      },
+      output: null,
+      daylyPercent: 0,
       todayAbsences: "",
       token: "Bearer " + localStorage.getItem("token"),
       fecha: null,
       API_URL: data.BASE_API_URL,
+      weeklyStatsUrl: data.BASE_API_URL + "reporting/lastWeekAbsences",
       imgViewerURL: "",
       newAbsence: {
         agent: "",
@@ -223,6 +244,38 @@ export default {
   computed: {},
   mounted() {},
   methods: {
+    async print() {
+      const el = this.$refs.chart2;
+      const options = {
+        type: "dataURL",
+      };
+      this.output = await this.$html2canvas(el, options);
+      const a = document.createElement("a");
+      document.body.appendChild(a);
+      a.download =
+        "Indice de ausencias " +
+        moment()
+          .format("DD-MM-yyyy-hhmmss")
+          .toString();
+      a.href = this.output;
+      a.click();
+    },
+    async print2() {
+      const el = this.$refs.chart1;
+      const options = {
+        type: "dataURL",
+      };
+      this.output = await this.$html2canvas(el, options);
+      const a = document.createElement("a");
+      document.body.appendChild(a);
+      a.download =
+        "Indice de ausencias " +
+        moment()
+          .format("DD-MM-yyyy-hhmmss")
+          .toString();
+      a.href = this.output;
+      a.click();
+    },
     setDate() {
       this.newAbsence.from = moment(this.fecha[0]).format("MM/DD/yyyy");
       this.newAbsence.until = moment(this.fecha[1]).format("MM/DD/yyyy");
@@ -426,6 +479,8 @@ export default {
               this.loadTodayAbsences();
               this.loadAbsences();
               this.clearForm();
+              this.weeklyAbsences = [];
+              this.loadWeekAnalytic();
               notyf.success("Ausencia registrada con exito.");
             } else {
               notyf.error("El registro no tuvo éxito. Reintenta.");
@@ -482,10 +537,69 @@ export default {
         .then((res) => {
           if (res.body.status) {
             this.todayAbsences = res.body.response;
+            const data = res.body.data;
           } else {
             console.error("No absences for today.");
           }
         });
+    },
+    loadTodayAnalyticAbsence() {
+      this.$http
+        .get(this.API_URL + "reporting/absecensByReason", {
+          headers: {
+            Authorization: this.token,
+          },
+        })
+        .then((res) => {
+          this.absecensByReason = res.body;
+          const data = res.body;
+          for (let i = 0; i < data.length; i++) {
+            const el = data[i];
+            const name = el._id.name;
+            const obj = [name, el.count];
+            this.chart1Data.push(obj);
+          }
+        });
+      /*
+              {
+                name: "Vacaciones",
+                data: { Vacaciones: 1 },
+              },
+            */
+    },
+    loadWeekAnalytic() {
+      this.$http
+        .get(this.API_URL + "reporting/lastWeekAbsences", {
+          headers: {
+            Authorization: this.token,
+          },
+        })
+        .then((res) => {
+          //this.weeklyAbsences = res.body;
+          const data = res.body;
+          for (let i = 0; i < data.length; i++) {
+            const el = data[i];
+            const fecha = moment(el.name).add(1, "days");
+            const obj = {
+              name: moment(fecha).calendar(null, {
+                lastDay: "[Ayer]",
+                sameDay: "[Hoy]",
+                nextDay: "[Mañana]",
+                lastWeek: "[El] dddd DD",
+                nextWeek: "dddd",
+                sameElse: "L",
+              }),
+              data: el.data,
+            };
+            this.weeklyAbsences.push(obj);
+          }
+        });
+      /*
+              {
+                name: "Vacaciones",
+                data: { Vacaciones: 1 },
+              },
+            */
     },
     dateFormatter(value) {
       moment.locale("es-mx");
@@ -499,6 +613,8 @@ export default {
   },
   created() {
     document.title = "Gestion de ausencias - Inicio";
+    this.loadTodayAnalyticAbsence();
+    this.loadWeekAnalytic();
     this.loadTodayAbsences();
     this.loadAbsences();
     this.getDate();

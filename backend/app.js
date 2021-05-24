@@ -11,6 +11,7 @@ const agentsRoutes = require("./src/routes/agent");
 const reasonsRoutes = require("./src/routes/reason");
 const token = require("./src/routes/token");
 const areaRoutes = require("./src/routes/area");
+const reportingRoutes = require("./src/routes/reporting");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -34,4 +35,5 @@ app.use("/api", agentsRoutes);
 app.use("/api", reasonsRoutes);
 app.use("/api", token);
 app.use("/api", areaRoutes);
+app.use("/api", reportingRoutes);
 module.exports = app;
