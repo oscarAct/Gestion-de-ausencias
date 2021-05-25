@@ -1,6 +1,6 @@
 const data = {
-  //BASE_API_URL: "http://localhost:3000/api/",
-  BASE_API_URL: "https://api-gestion-ausencias-r8jmv.ondigitalocean.app/api/",
+  BASE_API_URL: "http://localhost:3000/api/",
+  //BASE_API_URL: "https://api-gestion-ausencias-r8jmv.ondigitalocean.app/api/",
   FB_CONFIG: {
     apiKey: "AIzaSyAhltvhQkduoenbTMoEwLRaQwQGPee_aJk",
     authDomain: "gestor-de-archivos-34c41.firebaseapp.com",
