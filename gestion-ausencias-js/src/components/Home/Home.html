@@ -25,7 +25,7 @@
       id="proof"
     />
   </div>
-  <div class="container p-5 items-center mx-auto">
+  <div class="container p-2 items-center mx-auto">
     <!-- This example requires Tailwind CSS v2.0+ -->
     <div class="lg:flex lg:items-center lg:justify-between mb-5">
       <div class="flex-1 min-w-0">
@@ -116,6 +116,182 @@
       <main class="h-full overflow-y-auto">
         <div class="container mx-auto grid">
           <!-- Cards -->
+          <div class="flex items-center text-gray-800">
+            <div class="w-full">
+              <div
+                class="grid grid-cols-5 md:grid-flow-col lg:grid-flow-col xl:grid-flow-col gap-4"
+              >
+                <div
+                  class="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-2 row-span-1"
+                >
+                  <div class="flex flex-row bg-white shadow-md rounded p-4">
+                    <div
+                      class="flex items-center justify-center flex-shrink-0 h-12 w-12 rounded-xl bg-blue-100 text-blue-500"
+                    >
+                      <svg
+                        class="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div class="flex flex-col flex-grow ml-4">
+                      <div class="text-sm text-gray-500">
+                        Ausencias para hoy
+                      </div>
+                      <div class="font-bold text-5xl">
+                        {{ todayAbsences.length }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-2 row-span-1"
+                >
+                  <div class="flex flex-row bg-white shadow-md rounded p-4">
+                    <div
+                      class="flex items-center justify-center flex-shrink-0 h-12 w-12 rounded-xl bg-green-100 text-green-500"
+                    >
+                      <svg
+                        class="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div class="flex flex-col flex-grow ml-4">
+                      <div class="text-sm text-gray-500">
+                        Porcentaje de personal ausente
+                      </div>
+                      <div class="font-bold text-5xl">
+                        {{ Math.floor((100 / this.agents.length) *
+                        this.todayAbsences.length) }}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-3 row-span-3"
+                >
+                  <div class="mx-auto bg-white shadow-md w-full rounded-lg">
+                    <div class="tracking-wide px-4 py-4">
+                      <h2 class="text-gray-800 font-semibold mt-1">
+                        Top
+
+                        <select
+                          id="qty"
+                          v-model="qty"
+                          v-on:change="loadTop(qty, month)"
+                          class="pl-2 pr-6 py-0 border-0 font-semibold bg-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                        </select>
+                        mas ausentados de
+                        <select
+                          id="month"
+                          v-model="month"
+                          v-on:change="loadTop(qty, month)"
+                          class="pl-2 pr-6 py-0 border-0 font-semibold bg-white rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                          <option value="1">enero</option>
+                          <option value="2">febrero</option>
+                          <option value="3">marzo</option>
+                          <option value="4">abril</option>
+                          <option value="5">mayo</option>
+                          <option value="6">junio</option>
+                          <option value="7">julio</option>
+                          <option value="8">agosto</option>
+                          <option value="9">septiembre</option>
+                          <option value="10">octubre</option>
+                          <option value="11">noviembre</option>
+                          <option value="12">diciembre</option>
+                        </select>
+                      </h2>
+                      <span class="text-sm"
+                        >Mostrando {{mostAbsencedAgents.length}} elementos</span
+                      >
+                      <div class="pb-3">
+                        <!-- Iterable item -->
+                        <div
+                          v-if="mostAbsencedAgents.length == 0"
+                          class="bg-yellow-50 p-4 rounded flex items-start text-yellow-600 my-7 mx-auto max-w-2xl"
+                        >
+                          <div class="text-lg">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="fill-current w-5 pt-1"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"
+                              />
+                            </svg>
+                          </div>
+                          <div class=" px-3">
+                            <h3
+                              class="text-yellow-800 font-semibold tracking-wider text-left"
+                            >
+                              Atención
+                            </h3>
+                            <p class="pt-2 text-yellow-700">
+                              No hay información para mostrar con estos
+                              parámetros.
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="flex items-center mt-1"
+                          v-for="item in mostAbsencedAgents"
+                          v-if="item.name != ''"
+                        >
+                          <div
+                            class="w-1/5 font-semibold tracking-tighter text-xs text-gray-600"
+                          >
+                            <span>{{item.name}}</span>
+                          </div>
+                          <div class="w-3/5">
+                            <div class="bg-gray-300 w-full rounded-lg h-2">
+                              <div
+                                class="bg-blue-700 rounded-lg h-2"
+                                v-bind:style="{ width: (100 / mostAbsencedAgents[0].days) * item.days + '%' }"
+                              ></div>
+                            </div>
+                          </div>
+                          <div class="w-1/6 text-gray-700 pl-3">
+                            <span class="text-sm font-bold"
+                              >{{item.days}} días</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Charts -->
           <div class="grid grid-cols-12 grid-rows-1 gap-4 my-5">
             <div
               ref="chart1"
@@ -124,7 +300,7 @@
               <div class="w-full md:w-full px-2">
                 <div class="rounded-lg mb-4">
                   <div class="rounded-lg bg-white relative overflow-hidden">
-                    <div class="px-3 pt-2 pb-2 text-center relative z-10">
+                    <div class="px-3 py-1 text-center relative z-10">
                       <span class=" leading-tight">
                         Ausencias de hoy
                       </span>
@@ -148,20 +324,6 @@
                           />
                         </svg>
                       </button>
-                      <h3
-                        class="text-4xl text-gray-700 font-semibold leading-tight my-3"
-                      >
-                        {{ todayAbsences.length }}
-                      </h3>
-                      <p class="text-lg text-red-500 leading-tight">
-                        <span class="text-gray-900">Representa el</span> {{
-                        Math.floor((100 / this.agents.length) *
-                        this.todayAbsences.length) }}%
-                        <span class="text-gray-900">del personal</span>
-                      </p>
-                    </div>
-                    <div class="absolute bottom-0 inset-x-0">
-                      <canvas id="chart1" height="70"></canvas>
                     </div>
                   </div>
                 </div>
@@ -178,7 +340,7 @@
             </div>
             <div
               ref="chart2"
-              class="rounded-md bg-white p-9 p-9 shadow-lg col-span-12 lg:col-span-9 xl:col-span-9"
+              class="rounded-md bg-white p-9 p-9 shadow-md col-span-12 lg:col-span-9 xl:col-span-9"
             >
               <span>Indice de ausencias semanales</span>
               <button
@@ -362,7 +524,9 @@
             class="minimal mt-1 block mb-1 md:w-40 lg:w-40 xl:w-40 w-full inline-flex mr-2 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="agent.name">Nombre</option>
-            <option value="reason">Motivo</option>
+            <option value="agent.lastName">Apellidos</option>
+            <option value="when">Cuando</option>
+            <option value="reason.name">Motivo</option>
             <option value="description">Descripción</option>
             <option value="from">Fecha incio</option>
             <option value="until">Fecha fin</option>

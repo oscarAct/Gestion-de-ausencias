@@ -82,6 +82,8 @@ export default {
           },
         },
       },
+      qty: 5,
+      month: moment().format("M"),
       output: null,
       daylyPercent: 0,
       todayAbsences: "",
@@ -90,6 +92,7 @@ export default {
       API_URL: data.BASE_API_URL,
       weeklyStatsUrl: data.BASE_API_URL + "reporting/lastWeekAbsences",
       imgViewerURL: "",
+      mostAbsencedAgents: [],
       newAbsence: {
         agent: "",
         reason: "",
@@ -149,6 +152,7 @@ export default {
         placeholder: "No se encontraron registros.",
         responsiveLayout: "collapse",
         layout: "fitColumns",
+        movableColumns: true,
         downloadConfig: {
           columnGroups: false, //include column groups in column headers for download
           rowGroups: false, //do not include row groups in download
@@ -185,6 +189,35 @@ export default {
             title: "Motivo",
             field: "reason.name",
             hozAlign: "left",
+            sorter: "string",
+          },
+          {
+            title: "Cuando",
+            field: "when",
+            sorter: "string",
+            mutator: (value, data, type, params, component) => {
+              var today = moment().format("yyyy-MM-DD");
+              var from = moment(data.from)
+                .add(1, "days")
+                .format("yyyy-MM-DD");
+              var until = moment(data.until)
+                .add(1, "days")
+                .format("yyyy-MM-DD");
+
+              if (moment(today).isBetween(from, until, undefined, "[]")) {
+                return "Hoy";
+              } else {
+                return moment(from).calendar(null, {
+                  lastDay: "[Ayer]",
+                  sameDay: "[Hoy]",
+                  nextDay: "[Mañana]",
+                  lastWeek: "[El pasado] dddd DD",
+                  nextWeek: "[El próximo] dddd DD",
+                  sameElse: "L",
+                });
+              }
+            },
+            hozAlign: "left",
             sorter: "number",
           },
           {
@@ -212,15 +245,30 @@ export default {
           },
           {
             title: "Fecha inicio",
-            formatter: this.formatDate,
-            field: "from",
+            mutator: (value, data, type, params, component) => {
+              const date = moment(data.from)
+                .locale("es-mx")
+                //In production the date shows one day less. This line avoid that to happens
+                .add(1, "days")
+                .format("DD/MM/yyyy");
+
+              return date;
+            },
+            field: "fromDate",
             hozAlign: "left",
-            sorter: "date",
           },
           {
             title: "Fecha fin",
-            field: "until",
-            formatter: this.formatDate,
+            field: "untilDate",
+            mutator: (value, data, type, params, component) => {
+              const date = moment(data.until)
+                .locale("es-mx")
+                //In production the date shows one day less. This line avoid that to happens
+                .add(1, "days")
+                .format("DD/MM/yyyy");
+
+              return date;
+            },
             hozAlign: "left",
           },
           {
@@ -269,7 +317,7 @@ export default {
       const a = document.createElement("a");
       document.body.appendChild(a);
       a.download =
-        "Indice de ausencias " +
+        "Ausencias de hoy " +
         moment()
           .format("DD-MM-yyyy-hhmmss")
           .toString();
@@ -340,6 +388,9 @@ export default {
       const tabulator = this.$refs.tabulator.getInstance();
       tabulator.download("xlsx", "reporte_de_ausencias.xlsx", {
         sheetName: "Reporte ausencias",
+        from: "mm/dd/yyyy;@",
+        cellDates: true,
+        raw: true,
       });
     },
     downloadPdf() {
@@ -404,6 +455,17 @@ export default {
         })
         .then((res) => {
           this.absences = res.body.response;
+        });
+    },
+    loadMostAbsencedAgents(qty, month) {
+      this.$http
+        .get(this.API_URL + "reporting/recurrentAgents/" + qty + "/" + month, {
+          headers: {
+            Authorization: this.token,
+          },
+        })
+        .then((res) => {
+          this.mostAbsencedAgents = res.body;
         });
     },
     setId(e) {
@@ -567,6 +629,10 @@ export default {
               },
             */
     },
+    loadTop(qty, month) {
+      console.log(month);
+      this.loadMostAbsencedAgents(qty, month);
+    },
     loadWeekAnalytic() {
       this.$http
         .get(this.API_URL + "reporting/lastWeekAbsences", {
@@ -620,6 +686,7 @@ export default {
     this.getDate();
     this.loadAgents();
     this.loadReasons();
+    this.loadMostAbsencedAgents(this.qty, this.month);
     if (!firebase.apps.length) {
       firebase.initializeApp(data.FB_CONFIG);
     } else {
