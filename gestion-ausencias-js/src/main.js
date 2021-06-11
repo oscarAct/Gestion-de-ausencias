@@ -13,16 +13,21 @@ Vue.use(Chartkick.use(Chart));
 Vue.use(Chartkick.use(Highcharts));
 Chartkick.options = {
   colors: [
-    "#2f7ed8",
-    "#0d233a",
-    "#8bbc21",
-    "#910000",
-    "#1aadce",
-    "#492970",
-    "#f28f43",
-    "#77a1e5",
-    "#c42525",
-    "#a6c96a",
+    "#011f4b",
+    "#03396c",
+    "#005b96",
+    "#F8B195",
+    "#F67280",
+    "#C06C84",
+    "#6C5B7B",
+    "#355C7D",
+    "#6497b1",
+    "#b3cde0",
+    "#051e3e",
+    "#251e3e",
+    "#451e3e",
+    "#651e3e",
+    "#851e3e",
   ],
 };
 Vue.use(VueTabulator);

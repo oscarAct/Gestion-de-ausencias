@@ -1,5 +1,12 @@
 <div class="w-full pb-24">
-  <div class="loader hidden"></div>
+  <div id="loader-screen">
+    <div class="loader-container">
+      Por favor espera, estamos preparando el entorno...
+      <div class="mt-5 bg-gray-200 rounded-full w-1/4 h-2 ml-auto mr-auto">
+        <div class="w-1/3 mt-2 bg-green-500 h-2 text-center rounded-full"></div>
+      </div>
+    </div>
+  </div>
 
   <div class="img-viewer hidden" v-on:click="hideImgViewer()">
     <svg
@@ -20,7 +27,7 @@
     <img
       src=""
       alt="Imagen no disponible"
-      width="35%"
+      width="25%"
       class="img-centered"
       id="proof"
     />
@@ -118,11 +125,9 @@
           <!-- Cards -->
           <div class="flex items-center text-gray-800">
             <div class="w-full">
-              <div
-                class="grid grid-cols-5 md:grid-flow-col lg:grid-flow-col xl:grid-flow-col gap-4"
-              >
+              <div class="grid grid-cols-12 gap-4">
                 <div
-                  class="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-2 row-span-1"
+                  class="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-6"
                 >
                   <div class="flex flex-row bg-white shadow-md rounded p-4">
                     <div
@@ -154,7 +159,7 @@
                   </div>
                 </div>
                 <div
-                  class="col-span-5 sm:col-span-5 md:col-span-2 lg:col-span-2 row-span-1"
+                  class="col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-6"
                 >
                   <div class="flex flex-row bg-white shadow-md rounded p-4">
                     <div
@@ -187,7 +192,7 @@
                   </div>
                 </div>
                 <div
-                  class="col-span-5 sm:col-span-5 md:col-span-3 lg:col-span-3 row-span-3"
+                  class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-12"
                 >
                   <div class="mx-auto bg-white shadow-md w-full rounded-lg">
                     <div class="tracking-wide px-4 py-4">
@@ -233,6 +238,17 @@
                       >
                       <div class="pb-3">
                         <!-- Iterable item -->
+                        <column-chart
+                          class="mt-5"
+                          label="Cargando información..."
+                          :data="mostAbsencedAgents"
+                          :download="true"
+                          :library="chartOptions2"
+                          adapter="highcharts"
+                          :legend="true"
+                          :stacked="true"
+                        >
+                        </column-chart>
                         <div
                           v-if="mostAbsencedAgents.length == 0"
                           class="bg-yellow-50 p-4 rounded flex items-start text-yellow-600 my-7 mx-auto max-w-2xl"
@@ -273,7 +289,7 @@
                           <div class="w-3/5">
                             <div class="bg-gray-300 w-full rounded-lg h-2">
                               <div
-                                class="bg-blue-700 rounded-lg h-2"
+                                class="bg-blue-900 rounded-lg h-2"
                                 v-bind:style="{ width: (100 / mostAbsencedAgents[0].days) * item.days + '%' }"
                               ></div>
                             </div>
@@ -755,7 +771,14 @@
                         <label
                           for="country"
                           class="block text-sm font-medium text-gray-700"
-                          >Rango de fechas *</label
+                          >Rango de fechas *
+
+                          <span
+                            v-if="diff != 0"
+                            class="font-bold"
+                            v-bind:class="{'text-red-600': daysToCloud,  'text-gray-600': !daysToCloud}"
+                            >({{diff}} días)</span
+                          ></label
                         >
                         <div>
                           <date-picker
@@ -768,6 +791,39 @@
                             placeholder="Desde - Hasta"
                             input-class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm"
                           ></date-picker>
+                        </div>
+                      </div>
+                      <div class="col-span-6 sm:col-span-6">
+                        <div
+                          v-if="daysToCloud"
+                          class="relative px-4 py-3 my-1 leading-normal text-yellow-700 bg-yellow-100 rounded-lg transition transition-all"
+                          role="alert"
+                        >
+                          <span
+                            class="absolute inset-y-0 left-0 flex items-center ml-4 mr-3"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-6 w-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                              />
+                            </svg>
+                          </span>
+                          <p class="ml-8 text-sm">
+                            Hemos notado, que la cantidad de días es un poco
+                            elevada
+                            <span class="font-bold">({{diff}} días).</span>
+                            Por favor revisa la fecha de inicio y la fecha de
+                            fin. Si todo está bien, procede con tranquilidad.
+                          </p>
                         </div>
                       </div>
                       <div class="col-span-6 sm:col-span-6">
@@ -824,7 +880,7 @@
                             Por favor haz click en el boton
                             <img
                               class="inline-block"
-                              src="https://firebasestorage.googleapis.com/v0/b/gestor-de-archivos-34c41.appspot.com/o/absences%2Fabsences-photos%2Fupload.PNG?alt=media&token=4c0bb09c-c80b-41c1-8384-25d180aed67b"
+                              src="https://firebasestorage.googleapis.com/v0/b/gestor-de-archivos-34c41.appspot.com/o/absences%2Fabsences-photos%2Fupload.PNG?alt=media&token=53af7503-00c7-41e5-a883-737c8576cab3"
                               width="30px"
                               alt=""
                             />
