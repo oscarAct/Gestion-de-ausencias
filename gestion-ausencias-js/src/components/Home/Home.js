@@ -3,6 +3,8 @@
 import $ from "jquery";
 import { html2canvas } from "html2canvas";
 import DatePicker from "vue2-datepicker";
+import "vue2-datepicker/locale/es";
+
 import TabulatorComponent from "vue-tabulator";
 import "jspdf-autotable";
 import moment from "moment";
@@ -68,9 +70,13 @@ export default {
       absecensByReason: [],
       weeklyAbsences: [],
       chart1Data: [],
+      charging: 0,
       chartOptions: {
         plotOptions: {
+          colors: ["#0000FF", "#0066FF", "#00CCFF"],
           series: {
+            pointWidth: 15,
+            pointPadding: 0,
             dataLabels: {
               enabled: true,
               formatter: function() {
@@ -79,6 +85,32 @@ export default {
                 }
               },
             },
+          },
+          bar: {
+            borderWidth: 0,
+            pointPadding: 0,
+          },
+        },
+      },
+      daysToCloud: false,
+      chartOptions2: {
+        plotOptions: {
+          colors: ["#0000FF", "#0066FF", "#00CCFF"],
+          series: {
+            pointWidth: 200,
+            pointPadding: 0,
+            dataLabels: {
+              enabled: true,
+              formatter: function() {
+                if (this.y > 0) {
+                  return this.y;
+                }
+              },
+            },
+          },
+          bar: {
+            borderWidth: 0,
+            pointPadding: 0,
           },
         },
       },
@@ -102,6 +134,7 @@ export default {
         proof: "",
         proofName: "",
       },
+      diff: 0,
       searchValue: "",
       imgURL: "",
       agents: [],
@@ -176,6 +209,14 @@ export default {
             visible: false,
           },
           {
+            title: "UserID",
+            field: "agent.userId",
+            hozAlign: "left",
+            sorter: "string",
+            responsive: 1,
+            width: 90,
+          },
+          {
             title: "Nombre",
             field: "agent.name",
             responsive: 1,
@@ -189,7 +230,7 @@ export default {
             title: "Motivo",
             field: "reason.name",
             hozAlign: "left",
-            sorter: "string",
+            sorter: "String",
           },
           {
             title: "Cuando",
@@ -224,7 +265,7 @@ export default {
             title: "Area de trabajo",
             field: "agent.area.name",
             hozAlign: "left",
-            sorter: "number",
+            sorter: "String",
           },
           { title: "Descripcion", field: "description", responsive: 2 },
           {
@@ -327,6 +368,22 @@ export default {
     setDate() {
       this.newAbsence.from = moment(this.fecha[0]).format("MM/DD/yyyy");
       this.newAbsence.until = moment(this.fecha[1]).format("MM/DD/yyyy");
+
+      var a = moment(this.fecha[0]).format("MM/DD/yyyy");
+      var b = moment(this.fecha[1]).format("MM/DD/yyyy");
+
+      var c = moment(b).diff(a, "days") + 1;
+      if (Number.isNaN(c)) {
+        this.diff = 0;
+        this.daysToCloud = false;
+      } else {
+        this.diff = c;
+        if (this.diff > 15) {
+          this.daysToCloud = true;
+        } else {
+          this.daysToCloud = false;
+        }
+      }
     },
     formatPhoto(cell) {
       try {
@@ -455,6 +512,7 @@ export default {
         })
         .then((res) => {
           this.absences = res.body.response;
+          this.charging = this.charging + 1;
         });
     },
     loadMostAbsencedAgents(qty, month) {
@@ -466,6 +524,8 @@ export default {
         })
         .then((res) => {
           this.mostAbsencedAgents = res.body;
+          console.log(res.body);
+          this.charging = this.charging + 1;
         });
     },
     setId(e) {
@@ -572,6 +632,7 @@ export default {
             this.agents = array;
           } else {
           }
+          this.charging = this.charging + 1;
         });
     },
     loadReasons() {
@@ -587,6 +648,7 @@ export default {
           } else {
             console.error("No reasons was found.");
           }
+          this.charging = this.charging + 1;
         });
     },
     loadTodayAbsences() {
@@ -603,6 +665,7 @@ export default {
           } else {
             console.error("No absences for today.");
           }
+          this.charging = this.charging + 1;
         });
     },
     loadTodayAnalyticAbsence() {
@@ -621,6 +684,7 @@ export default {
             const obj = [name, el.count];
             this.chart1Data.push(obj);
           }
+          this.charging = this.charging + 1;
         });
       /*
               {
@@ -659,6 +723,7 @@ export default {
             };
             this.weeklyAbsences.push(obj);
           }
+          this.charging = this.charging + 1;
         });
       /*
               {
@@ -676,9 +741,21 @@ export default {
           .format("L")
       );
     },
+    loaderBg() {
+      console.log(this.charging);
+      let percent = (this.charging * 100) / 7;
+      console.log(percent + "%");
+      if (this.charging < 7) {
+        //this.loaderBg();
+        console.log(percent + "%");
+      } else {
+        return;
+      }
+    },
   },
   created() {
     document.title = "Gestion de ausencias - Inicio";
+
     this.loadTodayAnalyticAbsence();
     this.loadWeekAnalytic();
     this.loadTodayAbsences();
@@ -687,6 +764,7 @@ export default {
     this.loadAgents();
     this.loadReasons();
     this.loadMostAbsencedAgents(this.qty, this.month);
+    this.loaderBg();
     if (!firebase.apps.length) {
       firebase.initializeApp(data.FB_CONFIG);
     } else {

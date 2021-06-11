@@ -1,8 +1,27 @@
 @import "~vue-tabulator/dist/scss/bootstrap/tabulator_bootstrap4";
+body {
+  background-color: #f8f9ff;
+}
 .home {
 }
-
+.footer {
+  display: none;
+}
+//Loader that will be displayed in next update
+#loader-screen {
+  width: 100%;
+  height: 100vh;
+  z-index: 1000;
+  position: absolute;
+  background: white;
+  display: none;
+}
+.loader-container {
+  margin-top: 20%;
+  display: none;
+}
 .loader {
+  display: none;
   width: 100%;
   height: calc(100vh);
   overflow: hidden;
@@ -10,6 +29,7 @@
   background: rgb(241, 241, 241);
   position: absolute;
 }
+//Until here
 .border-t-1 {
   border-top-width: 1px;
 }
@@ -24,7 +44,7 @@
   overflow: hidden;
 }
 .img-centered {
-  margin: 8% auto;
+  margin: 0% auto;
   z-index: 1000;
 }
 .pointer {
@@ -76,9 +96,7 @@
 select.minimal {
   appearance: none;
 }
-body {
-  background-color: #f8f9ff;
-}
+
 .bg-main {
   background-color: #ffffff;
   border-top-left-radius: 6px;
