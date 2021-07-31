@@ -1,6 +1,6 @@
 <div>
   <!-- This example requires Tailwind CSS v2.0+ -->
-  <nav class="bg-gray-800">
+  <nav class="" style="background-color: #131d47;">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
       <div class="relative flex items-center justify-between h-16">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -49,12 +49,12 @@
           <div class="flex-shrink-0 flex items-center">
             <img
               class="block lg:hidden h-8 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+              src="../../assets/img/Logo oficial workflow only.svg"
               alt="Workflow"
             />
             <img
-              class="hidden lg:block h-8 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg"
+              class="hidden lg:block h-8 w-auto p-0"
+              src="../../assets/img/Logo oficial workflow.svg"
               alt="Workflow"
             />
           </div>
@@ -63,12 +63,12 @@
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
               <router-link
                 to="/"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                class="text-gray-100 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >Inicio</router-link
               >
               <router-link
                 to="/Personal/Colaboradores"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                class="text-gray-100 hover:bg-blue-900 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >Colaboradores</router-link
               >
             </div>
@@ -82,7 +82,7 @@
             <div>
               <button
                 v-if="token"
-                class="bg-gray-800 flex text-sm rounded-full focus:outline-none"
+                class="flex text-sm rounded-full focus:outline-none"
                 id="user-menu"
                 aria-haspopup="true"
               >
@@ -132,7 +132,7 @@
                 class="origin-top-right hidden text-left absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
                 role="menu"
                 id="profile-menu"
-                style="z-index: 1000;"
+                style="z-index: 1000000;"
                 aria-orientation="vertical"
                 aria-labelledby="user-menu"
               >

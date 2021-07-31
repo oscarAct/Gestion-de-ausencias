@@ -33,7 +33,7 @@ const routes = [
       }
     },
     meta: { title: "Gestion ausencias - Inicio" },
-    component: Home,
+    component: () => import("../views/Home.vue"),
   },
   {
     path: "/",
@@ -96,6 +96,11 @@ const routes = [
     name: "RecuperarContrasena",
     meta: { hideNavigation: true },
     component: () => import("../views/forgotPassword.vue"),
+  },
+  {
+    path: "/Mantenimiento",
+    name: "Mantenimiento",
+    component: () => import("../views/Maintenance.vue"),
   },
 ];
 

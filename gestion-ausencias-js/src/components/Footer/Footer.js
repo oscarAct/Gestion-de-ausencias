@@ -1,22 +1,13 @@
-
 export default {
-  name: 'footer',
+  name: "footer",
   components: {},
   props: [],
-  data () {
+  data() {
     return {
-
-    }
+      year: new Date().getFullYear(),
+    };
   },
-  computed: {
-
-  },
-  mounted () {
-
-  },
-  methods: {
-
-  }
-}
-
-
+  computed: {},
+  mounted() {},
+  methods: {},
+};

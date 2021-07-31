@@ -1,0 +1,34 @@
+.maintenance {
+  min-width: 100%;
+  min-height: 100vh;
+  overflow-y: hidden !important;
+}
+html {
+  overflow-y: hidden !important;
+}
+#container {
+  position: absolute;
+  top: 20%;
+  transform: translateY(-50%);
+  left: 50%;
+  transform: translateX(-50%);
+}
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rotating {
+  animation: rotating 15s linear infinite;
+}

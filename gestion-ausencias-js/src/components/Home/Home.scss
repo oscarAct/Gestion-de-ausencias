@@ -1,11 +1,12 @@
 @import "~vue-tabulator/dist/scss/bootstrap/tabulator_bootstrap4";
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 body {
   background-color: #f8f9ff;
+   font-family:Poppins,Helvetica,sans-serif;
+ -webkit-font-smoothing:antialiased;
+ -moz-osx-font-smoothing:grayscale
 }
 .home {
-}
-.footer {
-  display: none;
 }
 //Loader that will be displayed in next update
 #loader-screen {
