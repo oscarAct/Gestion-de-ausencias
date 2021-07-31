@@ -755,6 +755,9 @@ export default {
   },
   created() {
     document.title = "Gestion de ausencias - Inicio";
+    if(!localStorage.getItem("showAdvice")) {
+      localStorage.setItem("showAdvice", true);
+    }
 
     this.loadTodayAnalyticAbsence();
     this.loadWeekAnalytic();
